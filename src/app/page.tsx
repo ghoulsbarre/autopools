@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
-  MOCK_HISTORY, MOCK_VAULT, MOCK_POOLS, getRangeConfig,
+  MOCK_HISTORY, MOCK_POOLS, getRangeConfig,
   MOCK_LAST_BIG_DEPOSIT, MOCK_LAST_BIG_WITHDRAWAL, MOCK_LAST_BIG_TVL_DAY,
   MOCK_DEPOSITOR_STATS_INCEPTION, MOCK_DEPOSITOR_STATS_CURRENT,
   MOCK_GINI, MOCK_HOLD_TIME, MOCK_CHURN, MOCK_REDEPOSIT_RATE,
@@ -17,12 +17,109 @@ import { LineChart, Line, AreaChart, Area, BarChart, Bar, ComposedChart, Cell, X
 const TIME_RANGES: TimeRange[] = ["1W", "1M", "YTD", "1Y"];
 const DENOMS: Denom[] = ["Total", "USD", "ETH"];
 
+// Shape of the live data objects — mirrors the JSON files written by fetch-stats.js
+type AppData = {
+  generatedAt:               string | null;
+  // protocol-data.json
+  MOCK_HISTORY:              typeof MOCK_HISTORY;
+  MOCK_POOLS:                typeof MOCK_POOLS;
+  MOCK_LAST_BIG_DEPOSIT:     typeof MOCK_LAST_BIG_DEPOSIT;
+  MOCK_LAST_BIG_WITHDRAWAL:  typeof MOCK_LAST_BIG_WITHDRAWAL;
+  MOCK_LAST_BIG_TVL_DAY:     typeof MOCK_LAST_BIG_TVL_DAY;
+  // deposits-stats.json
+  MOCK_DEPOSITOR_STATS_INCEPTION: typeof MOCK_DEPOSITOR_STATS_INCEPTION;
+  MOCK_DEPOSITOR_STATS_CURRENT:   typeof MOCK_DEPOSITOR_STATS_CURRENT;
+  MOCK_MEDIAN_DEPOSIT_COUNT:      typeof MOCK_MEDIAN_DEPOSIT_COUNT;
+  MOCK_DEPOSIT_DISTRIBUTION:      typeof MOCK_DEPOSIT_DISTRIBUTION;
+  MOCK_COHORT_CONVICTION:         typeof MOCK_COHORT_CONVICTION;
+  MOCK_RETENTION_BY_TIER:         typeof MOCK_RETENTION_BY_TIER;
+  MOCK_CHURN_WATERFALL:           typeof MOCK_CHURN_WATERFALL;
+  MOCK_RETENTION_COHORTS:         typeof MOCK_RETENTION_COHORTS;
+  MOCK_HOLD_TIME:                 typeof MOCK_HOLD_TIME;
+  MOCK_CHURN:                     typeof MOCK_CHURN;
+  MOCK_REDEPOSIT_RATE:            typeof MOCK_REDEPOSIT_RATE;
+  MOCK_WALLET_BALANCES:           typeof MOCK_WALLET_BALANCES;
+  MOCK_GINI:                      typeof MOCK_GINI;
+};
+
+const MOCK_DEFAULTS: AppData = {
+  generatedAt:               null,
+  MOCK_HISTORY,
+  MOCK_POOLS,
+  MOCK_LAST_BIG_DEPOSIT,
+  MOCK_LAST_BIG_WITHDRAWAL,
+  MOCK_LAST_BIG_TVL_DAY,
+  MOCK_DEPOSITOR_STATS_INCEPTION,
+  MOCK_DEPOSITOR_STATS_CURRENT,
+  MOCK_MEDIAN_DEPOSIT_COUNT,
+  MOCK_DEPOSIT_DISTRIBUTION,
+  MOCK_COHORT_CONVICTION,
+  MOCK_RETENTION_BY_TIER,
+  MOCK_CHURN_WATERFALL,
+  MOCK_RETENTION_COHORTS,
+  MOCK_HOLD_TIME,
+  MOCK_CHURN,
+  MOCK_REDEPOSIT_RATE,
+  MOCK_WALLET_BALANCES,
+  MOCK_GINI,
+};
+
 export default function Page() {
   const [statsTab, setStatsTab] = useState<"Protocol" | "Autopools" | "Deposits">("Protocol");
   const [range, setRange] = useState<TimeRange>("1M");
   const [denom, setDenom] = useState<Denom>("Total");
+  const [data, setData] = useState<AppData>(MOCK_DEFAULTS);
 
-  const { snapshots, granularity } = getRangeConfig(range);
+  // Load live JSON data on mount; silently fall back to mock data on any error
+  useEffect(() => {
+    Promise.all([
+      fetch("/protocol-data.json").then(r => { if (!r.ok) throw new Error("no protocol-data.json"); return r.json(); }),
+      fetch("/deposits-stats.json").then(r => { if (!r.ok) throw new Error("no deposits-stats.json"); return r.json(); }),
+    ]).then(([proto, deps]) => {
+      setData({
+        generatedAt:               proto.generatedAt ?? null,
+        MOCK_HISTORY:              proto.history,
+        MOCK_POOLS:                proto.pools,
+        MOCK_LAST_BIG_DEPOSIT:     proto.lastBigDeposit    ?? MOCK_LAST_BIG_DEPOSIT,
+        MOCK_LAST_BIG_WITHDRAWAL:  proto.lastBigWithdrawal ?? MOCK_LAST_BIG_WITHDRAWAL,
+        MOCK_LAST_BIG_TVL_DAY:     proto.lastBigTVLDay     ?? MOCK_LAST_BIG_TVL_DAY,
+        MOCK_DEPOSITOR_STATS_INCEPTION: deps.depositorStatsInception,
+        MOCK_DEPOSITOR_STATS_CURRENT:   deps.depositorStatsCurrent,
+        MOCK_MEDIAN_DEPOSIT_COUNT:      deps.medianDepositCount,
+        MOCK_DEPOSIT_DISTRIBUTION:      deps.depositDistribution,
+        MOCK_COHORT_CONVICTION:         deps.cohortConviction,
+        MOCK_RETENTION_BY_TIER:         deps.retentionByTier,
+        MOCK_CHURN_WATERFALL:           deps.churnWaterfall,
+        MOCK_RETENTION_COHORTS:         deps.retentionCohorts,
+        MOCK_HOLD_TIME:                 deps.holdTime,
+        MOCK_CHURN:                     deps.churn,
+        MOCK_REDEPOSIT_RATE:            deps.redepositRate,
+        MOCK_WALLET_BALANCES:           deps.walletBalances,
+        MOCK_GINI:                      deps.gini,
+      });
+    }).catch(() => { /* keep mock data */ });
+  }, []);
+
+  // Shadow the module-level mock imports with live data (same names → zero JSX changes)
+  const {
+    MOCK_HISTORY:              MOCK_HISTORY,       // eslint-disable-line no-shadow
+    MOCK_POOLS:                MOCK_POOLS,         // eslint-disable-line no-shadow
+    MOCK_LAST_BIG_DEPOSIT:     MOCK_LAST_BIG_DEPOSIT,     // eslint-disable-line no-shadow
+    MOCK_LAST_BIG_WITHDRAWAL:  MOCK_LAST_BIG_WITHDRAWAL,  // eslint-disable-line no-shadow
+    MOCK_LAST_BIG_TVL_DAY:     MOCK_LAST_BIG_TVL_DAY,     // eslint-disable-line no-shadow
+    MOCK_DEPOSITOR_STATS_INCEPTION, MOCK_DEPOSITOR_STATS_CURRENT, // eslint-disable-line no-shadow
+    MOCK_MEDIAN_DEPOSIT_COUNT, MOCK_DEPOSIT_DISTRIBUTION,         // eslint-disable-line no-shadow
+    MOCK_COHORT_CONVICTION, MOCK_RETENTION_BY_TIER,               // eslint-disable-line no-shadow
+    MOCK_CHURN_WATERFALL, MOCK_RETENTION_COHORTS,                 // eslint-disable-line no-shadow
+    MOCK_HOLD_TIME, MOCK_CHURN, MOCK_REDEPOSIT_RATE,              // eslint-disable-line no-shadow
+    MOCK_WALLET_BALANCES, MOCK_GINI,                              // eslint-disable-line no-shadow
+    generatedAt,
+  } = data;
+
+  // MOCK_VAULT equivalent: latest snapshot
+  const MOCK_VAULT = MOCK_HISTORY[MOCK_HISTORY.length - 1] ?? MOCK_DEFAULTS.MOCK_HISTORY[MOCK_DEFAULTS.MOCK_HISTORY.length - 1];
+
+  const { snapshots, granularity } = getRangeConfig(range, MOCK_HISTORY);
 
   return (
       <div style={{
@@ -35,9 +132,12 @@ export default function Page() {
           <div style={{ fontSize: 20, letterSpacing: "0.3em", textTransform: "uppercase", color: "#f5c400" }}>
             Autopool Analysis System <span style={{ color: "#7a6200" }}>v1</span>
           </div>
-          {/* In production, replace with timestamp from most recent data fetch */}
           <div style={{ fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase", color: "#7a3300" }}>
-            Updated <span style={{ color: "#ff6b00" }}>Mar 03 2026 00:00 UTC</span>
+            Updated <span style={{ color: "#ff6b00" }}>
+              {generatedAt
+                ? new Date(generatedAt).toLocaleString("en-US", { month: "short", day: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "UTC", hour12: false }).toUpperCase() + " UTC"
+                : "Mock Data"}
+            </span>
           </div>
         </div>
         <div style={{ height: 2, background: "#c1121f" }} />

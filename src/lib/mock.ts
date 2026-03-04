@@ -458,20 +458,20 @@ export interface RangeConfig {
   granularity: Granularity;
 }
 
-export function getRangeConfig(range: TimeRange): RangeConfig {
-  const today = new Date("2026-03-03");
+export function getRangeConfig(range: TimeRange, history: DaySnapshot[] = MOCK_HISTORY): RangeConfig {
+  const today    = new Date();
   const todayStr = today.toISOString().slice(0, 10);
   switch (range) {
-    case "1W":  return { snapshots: MOCK_HISTORY.slice(-8),   granularity: "daily" };
-    case "1M":  return { snapshots: MOCK_HISTORY.slice(-31),  granularity: "daily" };
+    case "1W":  return { snapshots: history.slice(-8),   granularity: "daily" };
+    case "1M":  return { snapshots: history.slice(-31),  granularity: "daily" };
     case "YTD": {
-      const jan1 = `${today.getUTCFullYear()}-01-01`;
-      const visible = MOCK_HISTORY.filter(s => s.date >= jan1 && s.date <= todayStr);
-      const ctxIdx  = MOCK_HISTORY.findIndex(s => s.date >= jan1);
-      const withCtx = ctxIdx > 0 ? [MOCK_HISTORY[ctxIdx - 1], ...visible] : visible;
+      const jan1    = `${today.getUTCFullYear()}-01-01`;
+      const visible = history.filter(s => s.date >= jan1 && s.date <= todayStr);
+      const ctxIdx  = history.findIndex(s => s.date >= jan1);
+      const withCtx = ctxIdx > 0 ? [history[ctxIdx - 1], ...visible] : visible;
       return { snapshots: withCtx, granularity: visible.length > 180 ? "weekly" : "daily" };
     }
-    case "1Y":  return { snapshots: MOCK_HISTORY.slice(-366), granularity: "weekly" };
+    case "1Y":  return { snapshots: history.slice(-366), granularity: "weekly" };
   }
 }
 
