@@ -418,6 +418,10 @@ function buildDepositStats(allOps, allHolders, history, poolRateMap) {
   const today   = new Date();
   const todayMs = today.getTime();
 
+  // Wallets with a balance below this threshold are treated as dust and excluded
+  // from distribution, Gini, and retention calculations.
+  const MIN_BALANCE_USD = 10;
+
   // ── 1. Current wallet balances (USD) for distribution / Gini ────────────────
   const walletBalancesUSD = allHolders.map(h => {
     const nav    = Number(h.autoPool?.navPerShare ?? "1000000000000000000") / DIV_NATIVE;
@@ -429,10 +433,13 @@ function buildDepositStats(allOps, allHolders, history, poolRateMap) {
 
   walletBalancesUSD.sort((a, b) => a - b);
 
-  const totalTVL  = walletBalancesUSD.reduce((s, v) => s + v, 0);
-  const gini      = computeGini(walletBalancesUSD);
-  const medianPos = median(walletBalancesUSD);
-  const meanPos   = totalTVL / (walletBalancesUSD.length || 1);
+  // Exclude dust wallets from all holder-balance-based metrics
+  const walletBalancesFiltered = walletBalancesUSD.filter(v => v >= MIN_BALANCE_USD);
+
+  const totalTVL  = walletBalancesFiltered.reduce((s, v) => s + v, 0);
+  const gini      = computeGini(walletBalancesFiltered);
+  const medianPos = median(walletBalancesFiltered);
+  const meanPos   = totalTVL / (walletBalancesFiltered.length || 1);
 
   // ── 2. Deposit size distribution buckets ─────────────────────────────────────
   const BUCKETS = [
@@ -446,7 +453,7 @@ function buildDepositStats(allOps, allHolders, history, poolRateMap) {
   ];
   const depositDistribution = BUCKETS.map(b => ({
     label: b.label,
-    count: walletBalancesUSD.filter(v => v >= b.min && v < b.max).length,
+    count: walletBalancesFiltered.filter(v => v >= b.min && v < b.max).length,
   }));
 
   // ── 3. Group operations by wallet ────────────────────────────────────────────
@@ -570,6 +577,18 @@ function buildDepositStats(allOps, allHolders, history, poolRateMap) {
   };
 
   // ── 9. Cohort retention heatmap ───────────────────────────────────────────────
+  // Pre-compute holder balance map (used in retention and conviction sections)
+  const holderBalanceByWallet = new Map();
+  for (const h of allHolders) {
+    const walletId = h.user?.id?.toLowerCase();
+    if (!walletId) continue;
+    const nav    = Number(h.autoPool?.navPerShare ?? "1000000000000000000") / DIV_NATIVE;
+    const shares = sn(h.sharesHeld ?? "0");
+    const poolId = h.autoPool?.id?.toLowerCase();
+    const rate   = poolRateMap.get(poolId) ?? 1;
+    holderBalanceByWallet.set(walletId, (holderBalanceByWallet.get(walletId) ?? 0) + shares * nav * rate);
+  }
+
   const cohortMap = new Map(); // "MMM YY" → [walletFirstDepositMs]
   for (const w of walletMap.values()) {
     if (w.firstDepositMs === null) continue;
@@ -587,11 +606,12 @@ function buildDepositStats(allOps, allHolders, history, poolRateMap) {
     const stillHolding  = (atDaysMs) => {
       const cutoff = cohortFirstMs + atDaysMs;
       if (cutoff > todayMs) return null; // window hasn't elapsed
-      // A wallet is "still holding" if it has NOT fully exited by that point
-      // We approximate: if lastExitMs > cutoff or hasRedeposited, they're still in
+      // A wallet is "still holding" if it has NOT fully exited by that point.
+      // Dust wallets (balance < MIN_BALANCE_USD) are treated as effectively exited.
       const count = wallets.filter(w => {
-        if (!w.hasFullyExited) return true; // still holding today
-        return w.lastExitMs > cutoff;       // exited after the window
+        if (w.hasFullyExited) return w.lastExitMs > cutoff;
+        const bal = holderBalanceByWallet.get(w.id.toLowerCase()) ?? 0;
+        return bal >= MIN_BALANCE_USD;
       }).length;
       return wallets.length ? Math.round((count / wallets.length) * 100) : null;
     };
@@ -638,18 +658,7 @@ function buildDepositStats(allOps, allHolders, history, poolRateMap) {
     }));
 
   // ── 11. Cohort conviction (position size change by join cohort) ───────────────
-  // Build a wallet → current USD balance map from holders for efficient lookup
-  const holderBalanceByWallet = new Map();
-  for (const h of allHolders) {
-    const walletId = h.user?.id?.toLowerCase();
-    if (!walletId) continue;
-    const nav    = Number(h.autoPool?.navPerShare ?? "1000000000000000000") / DIV_NATIVE;
-    const shares = sn(h.sharesHeld ?? "0");
-    const poolId = h.autoPool?.id?.toLowerCase();
-    const rate   = poolRateMap.get(poolId) ?? 1;
-    holderBalanceByWallet.set(walletId, (holderBalanceByWallet.get(walletId) ?? 0) + shares * nav * rate);
-  }
-
+  // holderBalanceByWallet is already built in section 9 above
   const convictionCohorts = new Map();
   const COHORT_WINDOWS = [
     { label: "0–3 mo",  minMonths: 0,  maxMonths: 3  },
@@ -707,8 +716,9 @@ function buildDepositStats(allOps, allHolders, history, poolRateMap) {
       if (day === 0) { point[tier.key] = 100; continue; }
       const limitMs = day * 86400e3;
       const surviving = tierWallets.filter(w => {
-        if (!w.hasFullyExited) return true;
-        return (w.lastExitMs - w.firstDepositMs) > limitMs;
+        if (w.hasFullyExited) return (w.lastExitMs - w.firstDepositMs) > limitMs;
+        const bal = holderBalanceByWallet.get(w.id.toLowerCase()) ?? 0;
+        return bal >= MIN_BALANCE_USD;
       });
       point[tier.key] = Math.round((surviving.length / tierWallets.length) * 100);
     }
@@ -727,7 +737,7 @@ function buildDepositStats(allOps, allHolders, history, poolRateMap) {
     holdTime,
     churn,
     redepositRate,
-    walletBalances: walletBalancesUSD,
+    walletBalances: walletBalancesFiltered,
     gini,
   };
 }
