@@ -13,14 +13,12 @@
  *
  * Requires Node >= 18 (native fetch).
  *
- * FIELD NAME NOTE:
- * The queries below use field names inferred from the Tokemak subgraph schema
- * and the mock.ts comments.  If a query returns an error referencing an unknown
- * field, check the actual schema at each endpoint and update the field name here.
- * The most likely candidates to verify:
- *   - AutopoolDayData: assetsDepositedTotal / assetsWithdrawnTotal (native units)
- *   - AutopoolOperation: assets / assetsUSD / depositor.id
- *   - Holder: sharesHeld / account.id
+ * Verified schema field names (introspected 2026-03-03):
+ *   AutopoolDayData.vault { id }          (not autopool)
+ *   userAutopoolBalanceChanges            (not autopoolOperations)
+ *     .walletAddress / .vaultAddress / .timestamp / .items { assetChange shareChange }
+ *   Holder.user { id }                    (not account)
+ *   Holder.autoPool { id navPerShare }    (capital P; not autopool)
  */
 
 "use strict";
@@ -133,19 +131,19 @@ async function fetchPools(chainId) {
   }));
 }
 
-/** Fetch AutopoolDayData for a chain, starting from a Unix-seconds timestamp. */
-async function fetchDayData(chainId, sinceUnix) {
+/** Fetch AutopoolDayData for a chain, starting from a YYYY-MM-DD string. */
+async function fetchDayData(chainId, sinceDate) {
   return paginate(chainId, (first, skip) => `{
     autopoolDayDatas(
       first: ${first}
       skip: ${skip}
-      orderBy: date
+      orderBy: lastUpdateTimestamp
       orderDirection: asc
-      where: { date_gte: ${sinceUnix} }
+      where: { date_gte: "${sinceDate}", vault_not: null }
     ) {
       id
       date
-      autopool { id }
+      vault { id }
       totalAssetsUSD
       totalAssets
       assetsDepositedTotalUSD
@@ -158,52 +156,45 @@ async function fetchDayData(chainId, sinceUnix) {
   }`, "autopoolDayDatas");
 }
 
-/** Fetch ALL AutopoolOperation records on a chain (for wallet-level analytics). */
+/** Fetch ALL UserAutopoolBalanceChange records on a chain (wallet-level analytics). */
 async function fetchAllOperations(chainId) {
   return paginate(chainId, (first, skip) => `{
-    autopoolOperations(
+    userAutopoolBalanceChanges(
       first: ${first}
       skip: ${skip}
       orderBy: timestamp
       orderDirection: asc
     ) {
       id
-      type
-      depositor { id }
-      autopool { id symbol }
-      assets
-      assetsUSD
+      walletAddress
+      vaultAddress
       timestamp
+      items {
+        assetChange
+        shareChange
+      }
     }
-  }`, "autopoolOperations");
+  }`, "userAutopoolBalanceChanges");
 }
 
-/** Fetch recent large operations (≥ $50K) for headline event tiles. */
-async function fetchRecentBigOps(chainId, thresholdRaw) {
-  // thresholdRaw = threshold in raw 1e8 units, as a string
+/** Fetch the most recent N balance-change events for headline event tiles. */
+async function fetchRecentOps(chainId, limit = 200) {
   const data = await gql(chainId, `{
-    deposits: autopoolOperations(
-      first: 5
+    userAutopoolBalanceChanges(
+      first: ${limit}
       orderBy: timestamp
       orderDirection: desc
-      where: { type: "DEPOSIT", assetsUSD_gte: "${thresholdRaw}" }
     ) {
-      autopool { symbol }
-      assetsUSD
+      id
+      walletAddress
+      vaultAddress
       timestamp
-    }
-    withdrawals: autopoolOperations(
-      first: 5
-      orderBy: timestamp
-      orderDirection: desc
-      where: { type: "WITHDRAWAL", assetsUSD_gte: "${thresholdRaw}" }
-    ) {
-      autopool { symbol }
-      assetsUSD
-      timestamp
+      items {
+        assetChange
+      }
     }
   }`);
-  return { deposits: data.deposits ?? [], withdrawals: data.withdrawals ?? [] };
+  return data.userAutopoolBalanceChanges ?? [];
 }
 
 /** Fetch all current holders with non-zero balances on a chain. */
@@ -214,8 +205,8 @@ async function fetchHolders(chainId) {
       skip: ${skip}
       where: { sharesHeld_gt: "0" }
     ) {
-      account { id }
-      autopool { id navPerShare }
+      user { id }
+      autoPool { id navPerShare }
       sharesHeld
     }
   }`, "holders");
@@ -234,8 +225,8 @@ function buildHistory(allDayData, poolMap) {
   const byDate = new Map();
 
   for (const dd of allDayData) {
-    const date = dayStr(Number(dd.date));
-    const pool = poolMap.get(dd.autopool.id);
+    const date = dd.date; // already "YYYY-MM-DD" string from the subgraph
+    const pool = poolMap.get(dd.vault?.id);
     if (!pool) continue;
 
     const isEth      = ETH_TOKENS.has(pool.baseAsset?.symbol ?? "");
@@ -352,18 +343,28 @@ function buildPoolSummaries(rawPools, history) {
 
 // ── Headline events ────────────────────────────────────────────────────────────
 
-function buildHeadlineEvents(allBigOps, history) {
-  // Last big deposit ≥ $50K
-  const bigDep = allBigOps
-    .flatMap(({ chainId, deposits }) => deposits.map(d => ({ ...d, chainId })))
-    .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))[0];
+/**
+ * @param {Array}  recentOps   - normalized ops with { vaultAddress, timestamp, totalNative, symbol }
+ * @param {Map}    poolRateMap - pool address (lower) → USD per native unit
+ * @param {Array}  history     - DaySnapshot[]
+ */
+function buildHeadlineEvents(recentOps, poolRateMap, history) {
+  const THRESHOLD_USD = 50_000;
 
-  // Last big withdrawal ≥ $50K
-  const bigWit = allBigOps
-    .flatMap(({ chainId, withdrawals }) => withdrawals.map(w => ({ ...w, chainId })))
-    .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))[0];
+  const withUSD = recentOps.map(op => {
+    const rate   = poolRateMap.get(op.vaultAddress?.toLowerCase()) ?? 1;
+    const amtUSD = Math.abs(op.totalNative) * rate;
+    return { ...op, amtUSD };
+  });
 
-  // Last day where absolute TVL change ≥ $100K
+  const bigDeposits    = withUSD.filter(op => op.totalNative > 0  && op.amtUSD >= THRESHOLD_USD)
+                                .sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
+  const bigWithdrawals = withUSD.filter(op => op.totalNative < 0  && op.amtUSD >= THRESHOLD_USD)
+                                .sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
+
+  const bigDep = bigDeposits[0]    ?? null;
+  const bigWit = bigWithdrawals[0] ?? null;
+
   let bigTVLDay = { changeUSD: 0, date: history[history.length - 1]?.date ?? "" };
   for (let i = history.length - 1; i >= 1; i--) {
     const change = history[i].totalAssetsUSD - history[i - 1].totalAssetsUSD;
@@ -374,9 +375,9 @@ function buildHeadlineEvents(allBigOps, history) {
   }
 
   const toEvent = (op, positive) => op ? {
-    amountUSD: su(op.assetsUSD ?? "0"),
+    amountUSD: op.amtUSD,
     datetime:  new Date(Number(op.timestamp) * 1000).toISOString(),
-    pool:      op.autopool?.symbol ?? "?",
+    pool:      op.symbol ?? "?",
     positive,
   } : null;
 
@@ -408,31 +409,22 @@ function computeGini(values) {
 /**
  * Build all Deposits-tab metrics from raw operations + current holder balances.
  *
- * @param {Array} allOps     - AutopoolOperation rows across all chains
- * @param {Array} allHolders - Holder rows across all chains
- * @param {Array} history    - DaySnapshot[] (sorted ascending, for context)
+ * @param {Array} allOps      - userAutopoolBalanceChange rows (with totalNative pre-computed)
+ * @param {Array} allHolders  - Holder rows across all chains
+ * @param {Array} history     - DaySnapshot[] (sorted ascending, for context)
+ * @param {Map}   poolRateMap - pool address (lower) → USD per native unit
  */
-function buildDepositStats(allOps, allHolders, history) {
-  const today = new Date();
+function buildDepositStats(allOps, allHolders, history, poolRateMap) {
+  const today   = new Date();
   const todayMs = today.getTime();
 
   // ── 1. Current wallet balances (USD) for distribution / Gini ────────────────
   const walletBalancesUSD = allHolders.map(h => {
-    const nav     = Number(h.autopool?.navPerShare ?? "1000000000000000000") / DIV_NATIVE;
-    const shares  = sn(h.sharesHeld ?? "0");
-    // Convert to USD: for ETH pools, navPerShare is in ETH, so we need ETH price.
-    // Use the latest ethPriceUSD from history.
-    const latestSnap = history[history.length - 1];
-    const ethPrice   = latestSnap?.ethPriceUSD ?? 2000;
-    // navPerShare is stored in native units; for ETH pools multiply by ethPrice
-    // For USD pools navPerShare ≈ 1 USD (already in USD)
-    // We can't easily distinguish here without pool type, so approximate using
-    // the USD-denominated totalAssetsUSD / totalAssets ratio per pool.
-    // SIMPLIFICATION: use assetsUSD directly from the most recent operation or
-    // derive from shares × navPerShare. Since navPerShare in the Holder entity
-    // is the autopool's current navPerShare, and for stable pools it's ~1 USD,
-    // this gives a reasonable approximation.
-    return shares * nav * (h._isEth ? ethPrice : 1);
+    const nav    = Number(h.autoPool?.navPerShare ?? "1000000000000000000") / DIV_NATIVE;
+    const shares = sn(h.sharesHeld ?? "0");
+    const poolId = h.autoPool?.id?.toLowerCase();
+    const rate   = poolRateMap.get(poolId) ?? 1;
+    return shares * nav * rate;
   }).filter(v => v > 0);
 
   walletBalancesUSD.sort((a, b) => a - b);
@@ -462,26 +454,28 @@ function buildDepositStats(allOps, allHolders, history) {
   const walletMap = new Map();
 
   for (const op of allOps) {
-    const walletId = op.depositor?.id;
+    const walletId = op.walletAddress;
     if (!walletId) continue;
-    const amtUSD   = su(op.assetsUSD ?? "0");
-    const tsMs     = Number(op.timestamp) * 1000;
+    const rate   = poolRateMap.get(op.vaultAddress?.toLowerCase()) ?? 1;
+    const amtUSD = Math.abs(op.totalNative) * rate;
+    const type   = op.totalNative >= 0 ? "DEPOSIT" : "WITHDRAWAL";
+    const tsMs   = Number(op.timestamp) * 1000;
 
     if (!walletMap.has(walletId)) {
       walletMap.set(walletId, {
         id: walletId,
         ops: [],
-        firstDepositMs:   null,
+        firstDepositMs:     null,
         firstDepositAmtUSD: 0,
-        lastExitMs:       null,
-        hasFullyExited:   false,
-        hasRedeposited:   false,
-        depositCount:     0,
-        runningBalance:   0, // in operation-count units (not shares)
+        lastExitMs:         null,
+        hasFullyExited:     false,
+        hasRedeposited:     false,
+        depositCount:       0,
+        runningBalance:     0,
       });
     }
     const w = walletMap.get(walletId);
-    w.ops.push({ type: op.type, amtUSD, tsMs, autopoolSymbol: op.autopool?.symbol });
+    w.ops.push({ type, amtUSD, tsMs });
   }
 
   // Process each wallet's ops in chronological order
@@ -503,7 +497,7 @@ function buildDepositStats(allOps, allHolders, history) {
         }
         w.depositCount++;
         balance += op.amtUSD;
-      } else if (op.type === "WITHDRAWAL") {
+      } else {
         balance -= op.amtUSD;
         if (balance <= 0) {
           balance = 0;
@@ -644,6 +638,18 @@ function buildDepositStats(allOps, allHolders, history) {
     }));
 
   // ── 11. Cohort conviction (position size change by join cohort) ───────────────
+  // Build a wallet → current USD balance map from holders for efficient lookup
+  const holderBalanceByWallet = new Map();
+  for (const h of allHolders) {
+    const walletId = h.user?.id?.toLowerCase();
+    if (!walletId) continue;
+    const nav    = Number(h.autoPool?.navPerShare ?? "1000000000000000000") / DIV_NATIVE;
+    const shares = sn(h.sharesHeld ?? "0");
+    const poolId = h.autoPool?.id?.toLowerCase();
+    const rate   = poolRateMap.get(poolId) ?? 1;
+    holderBalanceByWallet.set(walletId, (holderBalanceByWallet.get(walletId) ?? 0) + shares * nav * rate);
+  }
+
   const convictionCohorts = new Map();
   const COHORT_WINDOWS = [
     { label: "0–3 mo",  minMonths: 0,  maxMonths: 3  },
@@ -660,18 +666,11 @@ function buildDepositStats(allOps, allHolders, history) {
       const age = todayMs - w.firstDepositMs;
       return age >= minMs && age < maxMs;
     });
-    // Current position size from walletBalancesUSD indexed by wallet id
-    // This requires matching holders back to walletMap — we'll approximate:
-    // changePct = (currentPositionUSD - firstDepositAmtUSD) / firstDepositAmtUSD × 100
     const changes = cohortWallets
       .filter(w => w.firstDepositAmtUSD > 0)
       .map(w => {
-        // Look up current balance from holders
-        const holder = allHolders.find(h => h.account?.id?.toLowerCase() === w.id.toLowerCase());
-        if (!holder) return null;
-        const nav     = Number(holder.autopool?.navPerShare ?? "1000000000000000000") / DIV_NATIVE;
-        const shares  = sn(holder.sharesHeld ?? "0");
-        const current = shares * nav;
+        const current = holderBalanceByWallet.get(w.id.toLowerCase()) ?? 0;
+        if (current === 0) return null;
         return ((current - w.firstDepositAmtUSD) / w.firstDepositAmtUSD) * 100;
       })
       .filter(v => v !== null);
@@ -749,7 +748,7 @@ async function main() {
   const now       = new Date();
   const sinceDate = new Date(now);
   sinceDate.setDate(sinceDate.getDate() - HISTORY_DAYS);
-  const sinceUnix = Math.floor(sinceDate.getTime() / 1000);
+  const sinceDateStr = sinceDate.toISOString().slice(0, 10); // YYYY-MM-DD
 
   // ── 1. Fetch pool metadata across all chains ─────────────────────────────────
   console.log("\n[1/5] Fetching pool metadata…");
@@ -764,15 +763,23 @@ async function main() {
     }
   }
 
-  // Build pool lookup map
+  // Build pool lookup map (by id)
   const poolMap = new Map(allRawPools.map(p => [p.id, p]));
+
+  // Build pool rate map (pool address lower → USD per native unit)
+  const poolRateMap = new Map();
+  for (const p of allRawPools) {
+    const totalUSD = su(p.totalAssetsUSD ?? "0");
+    const totalNat = sn(p.totalAssets    ?? "0");
+    if (totalNat > 0) poolRateMap.set(p.id.toLowerCase(), totalUSD / totalNat);
+  }
 
   // ── 2. Fetch AutopoolDayData ─────────────────────────────────────────────────
   console.log("\n[2/5] Fetching day data…");
   const allDayData = [];
   for (const chain of CHAINS) {
     try {
-      const dd = await fetchDayData(chain.id, sinceUnix);
+      const dd = await fetchDayData(chain.id, sinceDateStr);
       console.log(`  chain=${chain.id} found ${dd.length} day-data rows`);
       allDayData.push(...dd);
     } catch (e) {
@@ -780,16 +787,21 @@ async function main() {
     }
   }
 
-  // ── 3. Fetch big events ───────────────────────────────────────────────────────
+  // ── 3. Fetch recent ops for headline events ───────────────────────────────────
   console.log("\n[3/5] Fetching headline events…");
-  const threshold50K = String(50_000 * DIV_USD); // $50K in raw units
-  const allBigOps    = [];
+  const allRecentOps = [];
   for (const chain of CHAINS) {
     try {
-      const ops = await fetchRecentBigOps(chain.id, threshold50K);
-      allBigOps.push({ chainId: chain.id, ...ops });
+      const raw = await fetchRecentOps(chain.id);
+      const normalized = raw.map(op => ({
+        ...op,
+        totalNative: (op.items ?? []).reduce((sum, item) => sum + sn(item.assetChange ?? "0"), 0),
+        symbol: poolMap.get(op.vaultAddress)?.symbol ?? op.vaultAddress?.slice(0, 8),
+      }));
+      console.log(`  chain=${chain.id} found ${normalized.length} recent ops`);
+      allRecentOps.push(...normalized);
     } catch (e) {
-      console.warn(`  chain=${chain.id} big ops error: ${e.message}`);
+      console.warn(`  chain=${chain.id} recent ops error: ${e.message}`);
     }
   }
 
@@ -799,9 +811,13 @@ async function main() {
   const allHolders = [];
   for (const chain of CHAINS) {
     try {
-      const ops = await fetchAllOperations(chain.id);
-      console.log(`  chain=${chain.id} found ${ops.length} operations`);
-      allOps.push(...ops);
+      const raw = await fetchAllOperations(chain.id);
+      const normalized = raw.map(op => ({
+        ...op,
+        totalNative: (op.items ?? []).reduce((sum, item) => sum + sn(item.assetChange ?? "0"), 0),
+      }));
+      console.log(`  chain=${chain.id} found ${normalized.length} operations`);
+      allOps.push(...normalized);
     } catch (e) {
       console.warn(`  chain=${chain.id} operations error: ${e.message}`);
     }
@@ -819,8 +835,8 @@ async function main() {
 
   const history  = buildHistory(allDayData, poolMap);
   const pools    = buildPoolSummaries(allRawPools, history);
-  const events   = buildHeadlineEvents(allBigOps, history);
-  const deposits = buildDepositStats(allOps, allHolders, history);
+  const events   = buildHeadlineEvents(allRecentOps, poolRateMap, history);
+  const deposits = buildDepositStats(allOps, allHolders, history, poolRateMap);
 
   const generatedAt = now.toISOString();
 
