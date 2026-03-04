@@ -240,7 +240,7 @@ export default function Page() {
             const O  = "#ff6b00";
             const OD = "#7a3300";
             const Y  = "#f5c400";
-            const { snapshots, granularity } = getRangeConfig(range);
+            const { snapshots, granularity } = getRangeConfig(range, MOCK_HISTORY);
             // Use the same bucketing as the flows chart so x-axes share identical dates
             const tvlData = granularity === "weekly" ? getWeeklyTVL(snapshots) : snapshots.slice(1);
             const fmt = (dateStr: string) =>
@@ -321,7 +321,7 @@ export default function Page() {
             const Y  = "#f5c400";
             const G  = "#00ffb3";
             const R  = "#c1121f";
-            const { snapshots, granularity } = getRangeConfig(range);
+            const { snapshots, granularity } = getRangeConfig(range, MOCK_HISTORY);
             const flows = granularity === "weekly"
               ? getWeeklyFlows(snapshots, "Total")
               : getDailyFlows(snapshots, "Total").slice(1);
@@ -417,7 +417,7 @@ export default function Page() {
             const Y  = "#f5c400";
             const STABLES = "#f5c400";
             const ETH_COL = "#00c8ff";
-            const { snapshots, granularity } = getRangeConfig(range);
+            const { snapshots, granularity } = getRangeConfig(range, MOCK_HISTORY);
             const raw = granularity === "weekly" ? getWeeklyTVL(snapshots) : snapshots.slice(1);
             const chartData = raw.map((s) => {
               const total = s.totalAssetsUSD || 1;
