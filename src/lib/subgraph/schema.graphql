@@ -1,0 +1,3597 @@
+type AccTokeSet @entity(immutable: true) {
+	id: Bytes!
+	newAddress: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type AccessControllerSet @entity(immutable: true) {
+	id: Bytes!
+	newAddress: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type AsyncSwapperRegistrySet @entity(immutable: true) {
+	id: Bytes!
+	newAddress: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type AutopilotRouterSet @entity(immutable: true) {
+	id: Bytes!
+	newAddress: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type AutopoolFactoryRemoved @entity(immutable: true) {
+	id: Bytes!
+	vaultType: Bytes! # bytes32
+	factoryAddress: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type AutopoolFactorySet @entity(immutable: true) {
+	id: Bytes!
+	vaultType: Bytes! # bytes32
+	factoryAddress: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type AutopoolRegistrySet @entity(immutable: true) {
+	id: Bytes!
+	newAddress: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type CurveResolverSet @entity(immutable: true) {
+	id: Bytes!
+	curveResolver: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type DestinationTemplateRegistrySet @entity(immutable: true) {
+	id: Bytes!
+	newAddress: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type DestinationVaultRegistrySet @entity(immutable: true) {
+	id: Bytes!
+	newAddress: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type IncentivePricingStatsSet @entity(immutable: true) {
+	id: Bytes!
+	incentivePricingStats: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type MessageProxySet @entity(immutable: true) {
+	id: Bytes!
+	messageProxy: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type OwnershipTransferStarted @entity(immutable: true) {
+	id: Bytes!
+	previousOwner: Bytes! # address
+	newOwner: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+	id: Bytes!
+	previousOwner: Bytes! # address
+	newOwner: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RewardTokenAdded @entity(immutable: true) {
+	id: Bytes!
+	rewardToken: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RewardTokenRemoved @entity(immutable: true) {
+	id: Bytes!
+	rewardToken: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RootPriceOracleSet @entity(immutable: true) {
+	id: Bytes!
+	rootPriceOracle: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type StatsCalculatorRegistrySet @entity(immutable: true) {
+	id: Bytes!
+	newAddress: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type SwapRouterSet @entity(immutable: true) {
+	id: Bytes!
+	swapRouter: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type SystemSecuritySet @entity(immutable: true) {
+	id: Bytes!
+	security: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+type Approval @entity(immutable: true) {
+	id: Bytes!
+	owner: Bytes! # address
+	spender: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type TokeOwnershipTransferred @entity(immutable: true) {
+	id: Bytes!
+	previousOwner: Bytes! # address
+	newOwner: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Paused @entity(immutable: true) {
+	id: Bytes!
+	account: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Transfer @entity(immutable: true) {
+	id: Bytes!
+	from: Bytes! # address
+	to: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Unpaused @entity(immutable: true) {
+	id: Bytes!
+	account: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+type AddedToRemovalQueue @entity(immutable: true) {
+	id: Bytes!
+	destination: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type AutopoolETHApproval @entity(immutable: true) {
+	id: Bytes!
+	owner: Bytes! # address
+	spender: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Deposit @entity(immutable: true) {
+	id: Bytes!
+	sender: Bytes! # address
+	owner: Bytes! # address
+	assets: BigInt! # uint256
+	shares: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type DestinationDebtReporting @entity(immutable: true) {
+	id: Bytes!
+	autopool: Bytes! # address
+	destination: Bytes! # address
+	debtValueChange: BigInt! # uint256
+	claimed: BigInt! # uint256
+	claimGasUsed: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type DestinationVaultAdded @entity(immutable: true) {
+	id: Bytes!
+	destination: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type DestinationVaultRemoved @entity(immutable: true) {
+	id: Bytes!
+	destination: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type FeeCollected @entity(immutable: true) {
+	id: Bytes!
+	autopool: Bytes
+	fees: BigInt! # uint256
+	feeSink: Bytes! # address
+	mintedShares: BigInt! # uint256
+	profit: BigInt! # uint256
+	totalAssets: BigInt # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Initialized @entity(immutable: true) {
+	id: Bytes!
+	version: Int! # uint8
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Nav @entity(immutable: true) {
+	id: Bytes!
+	idle: BigInt! # uint256
+	debt: BigInt! # uint256
+	totalSupply: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type AutopoolETHPaused @entity(immutable: true) {
+	id: Bytes!
+	account: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type PeriodicFeeCollected @entity(immutable: true) {
+	id: Bytes!
+	autopool: Bytes
+	fees: BigInt! # uint256
+	feeSink: Bytes! # address
+	mintedShares: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RemovedFromRemovalQueue @entity(immutable: true) {
+	id: Bytes!
+	destination: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RewarderSet @entity(immutable: true) {
+	id: Bytes!
+	newRewarder: Bytes! # address
+	oldRewarder: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Shutdown @entity(immutable: true) {
+	id: Bytes!
+	reason: Int! # uint8
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type SymbolAndDescSet @entity(immutable: true) {
+	id: Bytes!
+	symbol: String! # string
+	desc: String! # string
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type TokensPulled @entity(immutable: true) {
+	id: Bytes!
+	tokens: [Bytes!]! # address[]
+	amounts: [BigInt!]! # uint256[]
+	destinations: [Bytes!]! # address[]
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type TokensRecovered @entity(immutable: true) {
+	id: Bytes!
+	tokens: [Bytes!]! # address[]
+	amounts: [BigInt!]! # uint256[]
+	destinations: [Bytes!]! # address[]
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type AutopoolETHTransfer @entity(immutable: true) {
+	id: Bytes!
+	from: Bytes! # address
+	to: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type AutopoolETHUnpaused @entity(immutable: true) {
+	id: Bytes!
+	account: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Withdraw @entity(immutable: true) {
+	id: Bytes!
+	sender: Bytes! # address
+	receiver: Bytes! # address
+	owner: Bytes! # address
+	assets: BigInt! # uint256
+	shares: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type WithdrawalQueueSet @entity(immutable: true) {
+	id: Bytes!
+	destinations: [Bytes!]! # address[]
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+type VaultAdded @entity(immutable: true) {
+	id: Bytes!
+	asset: Bytes! # address
+	vault: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type VaultRemoved @entity(immutable: true) {
+	id: Bytes!
+	asset: Bytes! # address
+	vault: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+type DestinationVaultApproval @entity(immutable: true) {
+	id: Bytes!
+	owner: Bytes! # address
+	spender: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type BaseAssetWithdraw @entity(immutable: true) {
+	id: Bytes!
+	amount: BigInt! # uint256
+	owner: Bytes! # address
+	to: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Donated @entity(immutable: true) {
+	id: Bytes!
+	sender: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type DestinationVaultInitialized @entity(immutable: true) {
+	id: Bytes!
+	version: Int! # uint8
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Recovered @entity(immutable: true) {
+	id: Bytes!
+	tokens: [Bytes!]! # address[]
+	amounts: [BigInt!]! # uint256[]
+	destinations: [Bytes!]! # address[]
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type DestinationVaultShutdown @entity(immutable: true) {
+	id: Bytes!
+	reason: Int! # uint8
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type DestinationVaultTransfer @entity(immutable: true) {
+	id: Bytes!
+	from: Bytes! # address
+	to: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type UnderlyerRecovered @entity(immutable: true) {
+	id: Bytes!
+	destination: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type UnderlyingDeposited @entity(immutable: true) {
+	id: Bytes!
+	amount: BigInt! # uint256
+	sender: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type UnderlyingWithdraw @entity(immutable: true) {
+	id: Bytes!
+	amount: BigInt! # uint256
+	owner: Bytes! # address
+	to: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type UpdateSignedMessage @entity(immutable: true) {
+	id: Bytes!
+	hash: Bytes! # bytes32
+	flag: Boolean! # bool
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type DestinationVaultWithdraw @entity(immutable: true) {
+	id: Bytes!
+	target: BigInt! # uint256
+	actual: BigInt! # uint256
+	debtLoss: BigInt! # uint256
+	claimLoss: BigInt! # uint256
+	fromIdle: BigInt! # uint256
+	fromDebt: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+type DestinationVaultRegistered @entity(immutable: true) {
+	id: Bytes!
+	vaultAddress: Bytes! # address
+	caller: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type FactorySet @entity(immutable: true) {
+	id: Bytes!
+	newFactory: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+type AddedToWhitelist @entity(immutable: true) {
+	id: Bytes!
+	wallet: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type ExtraRewardAdded @entity(immutable: true) {
+	id: Bytes!
+	reward: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type ExtraRewardRemoved @entity(immutable: true) {
+	id: Bytes!
+	reward: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type ExtraRewardsCleared @entity(immutable: true) {
+	id: Bytes!
+
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type QueuedRewardsUpdated @entity(immutable: true) {
+	id: Bytes!
+	startingQueuedRewards: BigInt! # uint256
+	startingNewRewards: BigInt! # uint256
+	queuedRewards: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RemovedFromWhitelist @entity(immutable: true) {
+	id: Bytes!
+	wallet: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RewardAdded @entity(immutable: true) {
+	id: Bytes!
+	reward: BigInt! # uint256
+	rewardRate: BigInt! # uint256
+	lastUpdateBlock: BigInt! # uint256
+	periodInBlockFinish: BigInt! # uint256
+	historicalRewards: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RewardPaid @entity(immutable: true) {
+	id: Bytes!
+	user: Bytes! # address
+	reward: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Staked @entity(immutable: true) {
+	id: Bytes!
+	user: Bytes! # address
+	rewarderAddress: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type TokeLockDurationUpdated @entity(immutable: true) {
+	id: Bytes!
+	newDuration: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type UserRewardUpdated @entity(immutable: true) {
+	id: Bytes!
+	user: Bytes! # address
+	amount: BigInt! # uint256
+	rewardPerTokenStored: BigInt! # uint256
+	lastUpdateBlock: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Withdrawn @entity(immutable: true) {
+	id: Bytes!
+	user: Bytes! # address
+	amount: BigInt! # uint256
+	rewarderAddress: Bytes!
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+type AccTokeApproval @entity(immutable: true) {
+	id: Bytes!
+	owner: Bytes! # address
+	spender: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type DelegateChanged @entity(immutable: true) {
+	id: Bytes!
+	delegator: Bytes! # address
+	fromDelegate: Bytes! # address
+	toDelegate: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type DelegateVotesChanged @entity(immutable: true) {
+	id: Bytes!
+	delegate: Bytes! # address
+	previousBalance: BigInt! # uint256
+	newBalance: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Extend @entity(immutable: true) {
+	id: Bytes!
+	user: Bytes! # address
+	lockupId: BigInt! # uint256
+	amount: BigInt! # uint256
+	oldEnd: BigInt! # uint256
+	newEnd: BigInt! # uint256
+	oldPoints: BigInt! # uint256
+	newPoints: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type AccTokePaused @entity(immutable: true) {
+	id: Bytes!
+	account: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RewardsAdded @entity(immutable: true) {
+	id: Bytes!
+	amount: BigInt! # uint256
+	accRewardPerShare: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RewardsClaimed @entity(immutable: true) {
+	id: Bytes!
+	user: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RewardsCollected @entity(immutable: true) {
+	id: Bytes!
+	user: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type SetMaxStakeDuration @entity(immutable: true) {
+	id: Bytes!
+	oldDuration: BigInt! # uint256
+	newDuration: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Stake @entity(immutable: true) {
+	id: Bytes!
+	user: Bytes! # address
+	lockupId: BigInt! # uint256
+	amount: BigInt! # uint256
+	end: BigInt! # uint256
+	points: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type AccTokeTransfer @entity(immutable: true) {
+	id: Bytes!
+	from: Bytes! # address
+	to: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type AccTokeUnpaused @entity(immutable: true) {
+	id: Bytes!
+	account: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Unstake @entity(immutable: true) {
+	id: Bytes!
+	user: Bytes! # address
+	lockupId: BigInt! # uint256
+	amount: BigInt! # uint256
+	end: BigInt! # uint256
+	points: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type TokenRemoved @entity(immutable: true) {
+	id: Bytes!
+	token: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+# type TokenSnapshot @entity(immutable: true) {
+# 	id: Bytes!
+# 	token: Bytes! # address
+# 	lastSnapshotTimestamp: BigInt! # uint40
+# 	fastFilterPrice: BigInt! # uint256
+# 	slowFilterPrice: BigInt! # uint256
+# 	initCount: BigInt! # uint256
+# 	initComplete: Boolean! # bool
+# 	updatedBlockNumber: BigInt!
+# 	blockTimestamp: BigInt!
+# 	transactionHash: Bytes!
+# }
+
+###########################################################
+## Custom
+###########################################################
+
+"""
+Simple ERC20 representation
+"""
+type RefToken @entity(immutable: false) {
+	# token address
+	id: Bytes!
+	"ERC20 Symbol"
+	symbol: String
+	"ERC20 Name"
+	name: String
+	"ERC20 Number of decimals"
+	decimals: BigInt!
+}
+
+"""
+Token info and stats for the protocol
+"""
+type Token @entity(immutable: false) {
+	# token address
+	id: Bytes!
+
+	"ERC20 Symbol"
+	symbol: String
+	"ERC20 Name"
+	name: String
+	"ERC20 Number of decimals"
+	decimals: BigInt!
+	"Total Supply of the token"
+	totalSupply: BigInt!
+
+	"Total amount locked in the protocol"
+	totalAmountLocked: BigInt!
+	"Total fees collected for the token"
+	feesCollected: BigInt!
+	"Total rewards claimed for the token"
+	rewardsClaimed: BigInt!
+
+	"Last used daily stats history entry"
+	lastDayData: TokenDayData
+
+	"Spot Price Oracle when token is an LP token"
+	spotPriceOracle: Bytes
+
+	"Token Oracle"
+	tokenOracle: Bytes
+}
+
+"""
+Overall protocol stats
+"""
+type Protocol @entity(immutable: false) {
+	id: String! # version
+	"Total number of wallets providing liquidity for the protocol"
+	totalSuppliers: BigInt!
+
+	"All assets locked / used in the protocol"
+	assets: [Token!]!
+
+	"TOKE address"
+	tokeAddress: Bytes!
+
+	"Currently configured RootPriceOracle"
+	rootPriceOracle: Bytes
+
+	"Incentive tokens registered in the system"
+	incentiveTokenValues: [TokenValue!]!
+
+	"Tokens we denominate pools in"
+	denominationTokenValues: [TokenValue!]!
+
+	"Last recorded ETH/USD price"
+	ethUsdPrice: BigInt!
+
+	"Last timestamp of recorded ETH/USD price"
+	ethUsdPriceTimestamp: BigInt!
+
+	roles: [RoleInfo!]!
+
+	autopoolRegistry: Bytes
+}
+
+type RoleInfo @entity(immutable: false) {
+	"The role itself"
+	id: Bytes!
+
+	"A decoded name of the role if we have it"
+	name: String
+
+	adminRole: Bytes!
+
+	holders: [Bytes!]!
+}
+
+"""
+Daily entry for protocol history
+"""
+type TokenDayData @entity(immutable: false) {
+	"Key of daily data entry. Format: `<tokenAddress>-<YYYY-MM-DD>`"
+	id: String!
+	"Token address"
+	token: Token!
+	"Date of data `YYYY-MM-DD`"
+	date: String!
+	"Total amount locked in the protocol"
+	totalAmountLocked: BigInt!
+	"Total fees collected for the token"
+	feesCollected: BigInt!
+	"Total rewards claimed for the token"
+	rewardsClaimed: BigInt!
+
+	"Token supply: first entry of the day"
+	open: BigInt!
+	"Token supply: high of the day"
+	high: BigInt!
+	"Token supply: low of the day"
+	low: BigInt!
+	"Token supply: last entry of the day"
+	close: BigInt!
+
+	"TS the day of the stats at 00:00"
+	timestamp: BigInt!
+}
+
+"""
+Staking overall stats
+"""
+type AccToke @entity(immutable: false) {
+	"Version of Staking (one entity per version)"
+	id: String! # ACCTOKE_VERSION
+	"Total number of wallets staking in the protocol"
+	totalStakers: BigInt!
+	"Total TOKE staked in the protocol"
+	totalStaked: BigInt!
+	"Total number of points issues to stakers"
+	totalSupply: BigInt!
+	"Total amount of rewards added to the protocol"
+	rewardsAdded: BigInt!
+	"Rewards per share"
+	accRewardPerShare: BigInt!
+	"Total amount of rewards claimed by stakers"
+	rewardsClaimed: BigInt!
+	"Total amount of rewards collected by stakers"
+	rewardsCollected: BigInt!
+
+	"Last used daily stats history entry"
+	lastDayData: AccTokeDayData!
+}
+
+"""
+Historical daily data for Staking
+
+The following fields are cumulative and are carried over:
+- totalStakers
+- totalSupply
+
+The following fields are reset daily:
+- rewardsAdded
+- rewardsClaimed
+- rewardsCollected
+"""
+type AccTokeDayData @entity(immutable: false) {
+	"Date of the stats (YYYY-MM-DD)"
+	id: String!
+	"Total number of stakers (cumulative)"
+	totalStakers: BigInt!
+	"Total TOKE staked in the protocol"
+	totalStaked: BigInt!
+	"Total number of points issues to stakers (cumulative)"
+	totalSupply: BigInt!
+	"Total amount of rewards added to the protocol (resets daily)"
+	rewardsAdded: BigInt!
+	"Rewards per share"
+	accRewardPerShare: BigInt!
+	"Total amount of rewards claimed by stakers (resets daily)"
+	rewardsClaimed: BigInt!
+	"Total amount of rewards collected by stakers (resets daily)"
+	rewardsCollected: BigInt!
+
+	"TS the day of the stats at 00:00"
+	timestamp: BigInt!
+}
+
+type AutopoolDestinationStats @entity(immutable: false) {
+	"{autopoolAddress}-{destinationVaultAddress} and optionally with a -{dayString} for the day data reference"
+	id: String!
+
+	baseApr: BigInt
+
+	feeApr: BigInt
+
+	incentiveApr: BigInt
+
+	safeTotalSupply: BigInt
+
+	priceReturn: BigInt
+
+	maxDiscount: BigInt
+
+	maxPremium: BigInt
+
+	ownedShares: BigInt
+
+	compositeReturn: BigInt
+
+	pricePerShare: BigInt
+
+	lastUpdated: BigInt
+}
+
+"""
+Autopool + Destination Vault data
+"""
+type AutopoolDestination @entity(immutable: false) {
+	"{autopoolAddress}-{destinationAddress}"
+	id: String!
+
+	"Address of the parent Autopool"
+	autopoolId: Bytes!
+
+	"Related DestinationVault"
+	destinationVault: DestinationVault!
+
+	"Current stats"
+	stats: AutopoolDestinationStats!
+}
+
+type AutopoolDestinationValuePerShare @entity(immutable: false) {
+	"{Autopool}-{Destination}"
+	id: String!
+	"Backed value per share"
+	backedValuePerShare: BigInt!
+	"Market value per share"
+	marketValuePerShare: BigInt!
+	"Market value per share high mark"
+	marketValuePerShareHighMark: BigInt!
+	"Running total market value number"
+	runningTotalValue: BigInt!
+	"Last Updated Block"
+	lastUpdatedBlock: BigInt!
+	"Last Updated Time"
+	lastUpdatedTimestamp: BigInt!
+}
+
+type AutopoolLstNavUpdateTracking @entity(immutable: false) {
+	"{Autopool}-{Lst}"
+	id: String!
+	"Market value in base asset at last nav update"
+	marketValueLast: BigInt!
+	"Amount of LST held at last nav update"
+	amountHeldLast: BigInt!
+	"Amount we add back to the nav for price return"
+	runningAddBack: BigInt!
+	"Last Updated Block"
+	lastUpdatedBlock: BigInt!
+	"Last Updated Time"
+	lastUpdatedTimestamp: BigInt!
+}
+
+type AutopoolDestinationValuePerShareDayData @entity(immutable: false) {
+	"{date}-{Autopool}-{Destination}"
+	id: String!
+	"Backed value per share"
+	backedValuePerShare: BigInt!
+	"Market value per share"
+	marketValuePerShare: BigInt!
+	"Market value per share high mark"
+	marketValuePerShareHighMark: BigInt!
+	"Running total market value number"
+	runningTotalValue: BigInt!
+	"Last Updated Block"
+	lastUpdatedBlock: BigInt!
+	"Last Updated Time"
+	lastUpdatedTimestamp: BigInt!
+}
+
+"""
+High level info for a specific vault
+Remember to update ArchivedAutopool for any matching fields
+"""
+type Autopool @entity(immutable: false) {
+	"Address of the vault"
+	id: Bytes!
+	"Base asset of the vault"
+	baseAsset: Token!
+
+	"Decimals of th Autopool receipt token"
+	decimals: BigInt!
+
+	"Token that nav and aprs are denominated in for the purposes of the subgraph"
+	denominatedIn: Token!
+
+	"Vault Type"
+	vaultType: Bytes!
+
+	"List of destination vaults active for this vault"
+	destinationVaults: [DestinationVault!]!
+
+	"Backed value per share of a Destination at last debt reporting"
+	destinationBackedValue: [AutopoolDestinationValuePerShare!]!
+
+	"List of underlying destination vault tokens"
+	destinationTokens: [Bytes!]!
+
+	destinationTokensCounts: [Int!]!
+
+	"List of constituent token that the Autopool has ever held"
+	possibleHeldUnderlyers: [Bytes!]!
+
+	"List of debt reportings"
+	debtReportings: [DestinationDebtReporting!]!
+
+	"Balance of funds currently in the vault pending allocation"
+	idle: BigInt!
+
+	"Funds allocated to destination vaults"
+	debt: BigInt!
+	"Net Asset Value (`idle` + `debt`)"
+	nav: BigInt!
+	"Nav that hasn't been re-denominated"
+	rawNav: BigInt!
+	"Nav last added back to calculation due to price return"
+	valueAddBack: BigInt!
+	"Value per Share"
+	navPerShare: BigInt!
+	"Pct change in nav per share from previous day"
+	navPerSharePctChange: BigInt!
+
+	"Backed debt value"
+	backedDebt: BigInt!
+	"Backed Net Asset Value (`idle` + `backedDebt`)"
+	backedNav: BigInt!
+	"Backed Value per Share"
+	backedNavPerShare: BigInt!
+	"Pct change in backed nav per share from previous day"
+	backedNavPerSharePctChange: BigInt!
+
+	"Represents one share unit"
+	one: BigInt!
+
+	"Total shares minted"
+	totalSupply: BigInt!
+
+	"Total streaming fees collected for this vault"
+	streamingFeesCollected: BigInt
+
+	"Total periodic fees collected for this vault"
+	periodicFeesCollected: BigInt
+
+	"Total fees collected"
+	feesCollected: BigInt
+
+	"Total of auto compounded earnings from destinationVault rewarders"
+	autoCompoundedEarnings: BigInt!
+
+	"Total of auto compounded earnings from destinationVault rewarders in USD"
+	autoCompoundedEarningsUSD: BigInt!
+
+	"Total number of wallets providing liquidity for the vault"
+	totalSuppliers: BigInt!
+
+	"Strategy for this vault"
+	strategy: Strategy
+
+	rewarder: Rewarder
+	"Total rewards claimed by users"
+	rewardsClaimed: BigInt!
+
+	"Currently set periodic fee"
+	periodicFee: BigInt!
+
+	"Currently set streaming fee"
+	streamingFee: BigInt!
+
+	"Is the vault in the current registry"
+	registered: Boolean!
+	"Is the vault paused"
+	paused: Boolean!
+	"Is the vault shutdown (one-way process)"
+	shutdown: Boolean!
+
+	"Last/current history entry"
+	lastDayData: AutopoolDayData
+
+	"Name"
+	name: String!
+
+	"Symbol"
+	symbol: String!
+
+	rebalances: [Rebalance!]!
+
+	"The tx hash of the latest transfer of shares"
+	lastTransferTxHash: Bytes
+
+	"The log index of the latest transfer of shares"
+	lastTransferTxLogIndex: BigInt
+
+	"The last receiver of transferred funds"
+	lastTransferTo: Bytes
+
+	"Id of the first 'day data' entity"
+	firstDayDataEntityId: String
+
+	"Day of the first 'day data' entity"
+	firstDayDataTimestamp: BigInt
+
+	"Estimated APY from the Autopool"
+	currentApy: BigInt
+
+	"1 Day MA of currentApy"
+	day1MAApy: BigInt
+
+	"2 Day MA of currentApy"
+	day2MAApy: BigInt
+
+	"3 Day MA of currentApy"
+	day3MAApy: BigInt
+
+	"7 Day MA of currentApy"
+	day7MAApy: BigInt
+
+	"10 Day MA of currentApy"
+	day10MAApy: BigInt
+
+	"20 Day MA of currentApy"
+	day20MAApy: BigInt
+
+	"30 Day MA of currentApy"
+	day30MAApy: BigInt
+
+	"7 Day Median MA"
+	day7MedianApy: BigInt
+
+	"30 Day Median MA"
+	day30MedianApy: BigInt
+
+	"Estimated APY from the Autopool using backed nav"
+	currentBackedApy: BigInt
+
+	"1 Day MA of currentBackedApy"
+	day1MABackedApy: BigInt
+
+	"2 Day MA of currentBackedApy"
+	day2MABackedApy: BigInt
+
+	"3 Day MA of currentBackedApy"
+	day3MABackedApy: BigInt
+
+	"7 Day MA of currentBackedApy"
+	day7MABackedApy: BigInt
+
+	"10 Day MA of currentBackedApy"
+	day10MABackedApy: BigInt
+
+	"20 Day MA of currentBackedApy"
+	day20MABackedApy: BigInt
+
+	"30 Day MA of currentBackedApy"
+	day30MABackedApy: BigInt
+
+	"7 Day Median MA"
+	day7MedianBackedApy: BigInt
+
+	"30 Day Median MA"
+	day30MedianBackedApy: BigInt
+
+	"Destinations that have been made inactive on the pool"
+	inactiveDestinations: [RemovedDestination!]!
+
+	priceValueLost: BigInt
+	priceReturn: BigInt
+
+	assetsDepositedTotal: BigInt
+	assetsWithdrawnTotal: BigInt
+	totalAssets: BigInt
+
+	assetsDepositedTotalUSD: BigInt
+	assetsWithdrawnTotalUSD: BigInt
+	totalAssetsUSD: BigInt
+}
+
+"""
+High level info for a specific vault
+"""
+type ArchivedAutopool @entity(immutable: false) {
+	"Address of the vault"
+	id: Bytes!
+	"Base asset of the vault"
+	baseAsset: Token!
+
+	"Decimals of th Autopool receipt token"
+	decimals: BigInt!
+
+	"Token that nav and aprs are denominated in for the purposes of the subgraph"
+	denominatedIn: Token!
+
+	"Vault Type"
+	vaultType: Bytes!
+
+	"List of destination vaults active for this vault"
+	destinationVaults: [DestinationVault!]!
+
+	"Backed value per share of a Destination at last debt reporting"
+	destinationBackedValue: [AutopoolDestinationValuePerShare!]!
+
+	"List of underlying destination vault tokens"
+	destinationTokens: [Bytes!]!
+
+	destinationTokensCounts: [Int!]!
+
+	"List of constituent token that the Autopool has ever held"
+	possibleHeldUnderlyers: [Bytes!]!
+
+	"List of debt reportings"
+	debtReportings: [DestinationDebtReporting!]!
+
+	"Balance of funds currently in the vault pending allocation"
+	idle: BigInt!
+
+	"Funds allocated to destination vaults"
+	debt: BigInt!
+	"Net Asset Value (`idle` + `debt`)"
+	nav: BigInt!
+	"Nav that hasn't been re-denominated"
+	rawNav: BigInt!
+	"Nav last added back to calculation due to price return"
+	valueAddBack: BigInt!
+	"Value per Share"
+	navPerShare: BigInt!
+	"Pct change in nav per share from previous day"
+	navPerSharePctChange: BigInt!
+
+	"Backed debt value"
+	backedDebt: BigInt!
+	"Backed Net Asset Value (`idle` + `backedDebt`)"
+	backedNav: BigInt!
+	"Backed Value per Share"
+	backedNavPerShare: BigInt!
+	"Pct change in backed nav per share from previous day"
+	backedNavPerSharePctChange: BigInt!
+
+	"Represents one share unit"
+	one: BigInt!
+
+	"Total shares minted"
+	totalSupply: BigInt!
+
+	"Total streaming fees collected for this vault"
+	streamingFeesCollected: BigInt
+
+	"Total periodic fees collected for this vault"
+	periodicFeesCollected: BigInt
+
+	"Total fees collected"
+	feesCollected: BigInt
+
+	"Total of auto compounded earnings from destinationVault rewarders"
+	autoCompoundedEarnings: BigInt!
+
+	"Total of auto compounded earnings from destinationVault rewarders in USD"
+	autoCompoundedEarningsUSD: BigInt!
+
+	"Total number of wallets providing liquidity for the vault"
+	totalSuppliers: BigInt!
+
+	"Strategy for this vault"
+	strategy: Strategy
+
+	rewarder: Rewarder
+	"Total rewards claimed by users"
+	rewardsClaimed: BigInt!
+
+	"Currently set periodic fee"
+	periodicFee: BigInt!
+
+	"Currently set streaming fee"
+	streamingFee: BigInt!
+
+	"Is the vault in the current registry"
+	registered: Boolean!
+	"Is the vault paused"
+	paused: Boolean!
+	"Is the vault shutdown (one-way process)"
+	shutdown: Boolean!
+
+	"Last/current history entry"
+	lastDayData: AutopoolDayData
+
+	"Name"
+	name: String!
+
+	"Symbol"
+	symbol: String!
+
+	rebalances: [Rebalance!]!
+
+	"The tx hash of the latest transfer of shares"
+	lastTransferTxHash: Bytes
+
+	"The log index of the latest transfer of shares"
+	lastTransferTxLogIndex: BigInt
+
+	"The last receiver of transferred funds"
+	lastTransferTo: Bytes
+
+	"Id of the first 'day data' entity"
+	firstDayDataEntityId: String
+
+	"Day of the first 'day data' entity"
+	firstDayDataTimestamp: BigInt
+
+	"Estimated APY from the Autopool"
+	currentApy: BigInt
+
+	"1 Day MA of currentApy"
+	day1MAApy: BigInt
+
+	"2 Day MA of currentApy"
+	day2MAApy: BigInt
+
+	"3 Day MA of currentApy"
+	day3MAApy: BigInt
+
+	"7 Day MA of currentApy"
+	day7MAApy: BigInt
+
+	"10 Day MA of currentApy"
+	day10MAApy: BigInt
+
+	"20 Day MA of currentApy"
+	day20MAApy: BigInt
+
+	"30 Day MA of currentApy"
+	day30MAApy: BigInt
+
+	"7 Day Median MA"
+	day7MedianApy: BigInt
+
+	"30 Day Median MA"
+	day30MedianApy: BigInt
+
+	"Estimated APY from the Autopool using backed nav"
+	currentBackedApy: BigInt
+
+	"1 Day MA of currentBackedApy"
+	day1MABackedApy: BigInt
+
+	"2 Day MA of currentBackedApy"
+	day2MABackedApy: BigInt
+
+	"3 Day MA of currentBackedApy"
+	day3MABackedApy: BigInt
+
+	"7 Day MA of currentBackedApy"
+	day7MABackedApy: BigInt
+
+	"10 Day MA of currentBackedApy"
+	day10MABackedApy: BigInt
+
+	"20 Day MA of currentBackedApy"
+	day20MABackedApy: BigInt
+
+	"30 Day MA of currentBackedApy"
+	day30MABackedApy: BigInt
+
+	"7 Day Median MA"
+	day7MedianBackedApy: BigInt
+
+	"30 Day Median MA"
+	day30MedianBackedApy: BigInt
+
+	"Destinations that have been made inactive on the pool"
+	inactiveDestinations: [RemovedDestination!]!
+
+	priceValueLost: BigInt
+	priceReturn: BigInt
+
+	assetsDepositedTotal: BigInt
+	assetsWithdrawnTotal: BigInt
+	totalAssets: BigInt
+
+	assetsDepositedTotalUSD: BigInt
+	assetsWithdrawnTotalUSD: BigInt
+	totalAssetsUSD: BigInt
+}
+
+type RemovedDestinationsUnderlyingTokens @entity(immutable: false) {
+	"Address of the token"
+	id: Bytes!
+	"Address of the token"
+	tokenAddress: Bytes!
+}
+
+type RemovedDestinationsUnderlyingTokenSymbols @entity(immutable: false) {
+	"Address of the token"
+	id: Bytes!
+	"Symbol of the token"
+	symbol: String!
+}
+
+type RemovedDestinationsUnderlyingValueHeld @entity(immutable: false) {
+	"Address of the token"
+	id: Bytes!
+	"Will be 0"
+	valueHeldInEth: BigInt!
+}
+
+type RemovedDestination @entity(immutable: false) {
+	"DestinationVault address"
+	id: Bytes!
+	"Address of DestinationVault"
+	vaultAddress: Bytes!
+	"Name of the DEX"
+	exchangeName: String!
+	"Will be 0"
+	totalSupply: BigInt!
+	"Will be 0"
+	debtValueHeldByVault: BigInt!
+	"Will be 0"
+	lastSnapshotTimestamp: BigInt!
+	"Address of the underlying pool"
+	dexPool: Bytes!
+	"Address of the underlying LP token"
+	lpTokenAddress: Bytes!
+	"Underlying LP token symbol"
+	lpTokenSymbol: String!
+	"Underlying LP token name"
+	lpTokenName: String!
+	"Will be 0"
+	compositeReturn: BigInt!
+	"Constituent tokens of the LP token"
+	underlyingTokens: [RemovedDestinationsUnderlyingTokens!]!
+	"Will have entities but values will be 0"
+	underlyingTokenValueHeld: [RemovedDestinationsUnderlyingValueHeld!]!
+	"Constituent token symbols of the LP token"
+	underlyingTokenSymbols: [RemovedDestinationsUnderlyingTokenSymbols!]!
+	"Will have entries but values will be 0"
+	reservesInEth: [BigInt!]!
+}
+
+"""
+History entry for specific vault for specific day
+"""
+type AutopoolDayData @entity(immutable: false) {
+	"Key of daily data entry. Format: `<vaultAddress>-<YYYY-MM-DD>`"
+	id: String!
+	"Vault address"
+	vault: Autopool!
+	"Base asset info"
+	baseAsset: Token!
+	"Date of data"
+	date: String!
+
+	"Total number of vault's liquidity providers"
+	totalSuppliers: BigInt!
+
+	"Total rewards claimed by users"
+	rewardsClaimed: BigInt!
+
+	"Funds currently in the vault pending allocation"
+	idle: BigInt!
+	"Funds allocated to destination vaults"
+	debt: BigInt!
+	"Net Asset Value"
+	nav: BigInt!
+
+	"Backed debt value"
+	backedDebt: BigInt!
+	"Backed Net Asset Value (`idle` + `backedDebt`)"
+	backedNav: BigInt!
+	"Backed Value per Share"
+	backedNavPerShare: BigInt!
+	"Pct change in backed nav per share from previous day"
+	backedNavPerSharePctChange: BigInt!
+
+	"Asset amount per share"
+	navPerShare: BigInt!
+
+	"Pct change in nav per share from previous day"
+	navPerSharePctChange: BigInt!
+
+	"Total shares minted"
+	totalSupply: BigInt!
+
+	"Total streaming fees collected for this vault"
+	streamingFeesCollected: BigInt
+
+	"Total periodic fees collected for this vault"
+	periodicFeesCollected: BigInt
+
+	"Total fees collected"
+	feesCollected: BigInt
+
+	"Total of auto compounded earnings from destinationVault rewarders"
+	autoCompoundedEarnings: BigInt!
+
+	"Total of auto compounded earnings from destinationVault rewarders in USD"
+	autoCompoundedEarningsUSD: BigInt!
+
+	"TS the day of the stats at 00:00"
+	timestamp: BigInt!
+
+	"Estimated APY from rewarder on this day"
+	rewarderApy: BigInt
+
+	"7 Day MA of the rewarderApy on this day"
+	rewarderDay7MAApy: BigInt
+
+	"30 Day MA of the rewarderApy on this day"
+	rewarderDay30MAApy: BigInt
+
+	"Estimated APY from the Autopool on this day"
+	autopoolApy: BigInt
+
+	"1 Day MA of currentApy"
+	autopoolDay1MAApy: BigInt
+
+	"2 Day MA of currentApy"
+	autopoolDay2MAApy: BigInt
+
+	"3 Day MA of currentApy"
+	autopoolDay3MAApy: BigInt
+
+	"4 Day MA of currentApy"
+	autopoolDay4MAApy: BigInt
+
+	"5 Day MA of currentApy"
+	autopoolDay5MAApy: BigInt
+
+	"6 Day MA of currentApy"
+	autopoolDay6MAApy: BigInt
+
+	"7 Day MA of currentApy"
+	autopoolDay7MAApy: BigInt
+
+	"8 Day MA of currentApy"
+	autopoolDay8MAApy: BigInt
+
+	"9 Day MA of currentApy"
+	autopoolDay9MAApy: BigInt
+
+	"10 Day MA of currentApy"
+	autopoolDay10MAApy: BigInt
+
+	"11 Day MA of currentApy"
+	autopoolDay11MAApy: BigInt
+
+	"12 Day MA of currentApy"
+	autopoolDay12MAApy: BigInt
+
+	"13 Day MA of currentApy"
+	autopoolDay13MAApy: BigInt
+
+	"14 Day MA of currentApy"
+	autopoolDay14MAApy: BigInt
+
+	"15 Day MA of currentApy"
+	autopoolDay15MAApy: BigInt
+
+	"16 Day MA of currentApy"
+	autopoolDay16MAApy: BigInt
+
+	"17 Day MA of currentApy"
+	autopoolDay17MAApy: BigInt
+
+	"18 Day MA of currentApy"
+	autopoolDay18MAApy: BigInt
+
+	"19 Day MA of currentApy"
+	autopoolDay19MAApy: BigInt
+
+	"20 Day MA of currentApy"
+	autopoolDay20MAApy: BigInt
+
+	"21 Day MA of currentApy"
+	autopoolDay21MAApy: BigInt
+
+	"22 Day MA of currentApy"
+	autopoolDay22MAApy: BigInt
+
+	"23 Day MA of currentApy"
+	autopoolDay23MAApy: BigInt
+
+	"24 Day MA of currentApy"
+	autopoolDay24MAApy: BigInt
+
+	"25 Day MA of currentApy"
+	autopoolDay25MAApy: BigInt
+
+	"26 Day MA of currentApy"
+	autopoolDay26MAApy: BigInt
+
+	"27 Day MA of currentApy"
+	autopoolDay27MAApy: BigInt
+
+	"28 Day MA of currentApy"
+	autopoolDay28MAApy: BigInt
+
+	"29 Day MA of currentApy"
+	autopoolDay29MAApy: BigInt
+
+	"30 Day MA of currentApy"
+	autopoolDay30MAApy: BigInt
+
+	"7 Day Median MA"
+	autopoolDay7MedianApy: BigInt
+
+	"30 Day Median MA"
+	autopoolDay30MedianApy: BigInt
+
+	"Estimated Backed APY from the Autopool on this day"
+	autopoolBackedApy: BigInt
+
+	"1 Day MA of currentBackedApy"
+	autopoolDay1MABackedApy: BigInt
+
+	"2 Day MA of currentBackedApy"
+	autopoolDay2MABackedApy: BigInt
+
+	"3 Day MA of currentBackedApy"
+	autopoolDay3MABackedApy: BigInt
+
+	"7 Day MA of currentBackedApy"
+	autopoolDay7MABackedApy: BigInt
+
+	"10 Day MA of currentBackedApy"
+	autopoolDay10MABackedApy: BigInt
+
+	"20 Day MA of currentBackedApy"
+	autopoolDay20MABackedApy: BigInt
+
+	"30 Day MA of currentBackedApy"
+	autopoolDay30MABackedApy: BigInt
+
+	"7 Day Median MA"
+	autopoolDay7MedianBackedApy: BigInt
+
+	"30 Day Median MA"
+	autopoolDay30MedianBackedApy: BigInt
+
+	"Last time this record was updated"
+	lastUpdateTimestamp: BigInt
+
+	priceValueLost: BigInt
+	priceReturn: BigInt
+
+	assetsDepositedTotal: BigInt
+	assetsWithdrawnTotal: BigInt
+	totalAssets: BigInt
+
+	assetsDepositedTotalUSD: BigInt
+	assetsWithdrawnTotalUSD: BigInt
+	totalAssetsUSD: BigInt
+}
+
+"""
+Destination Vault
+"""
+type DestinationVault @entity(immutable: false) {
+	"Destination vault address"
+	id: Bytes!
+	"Token name"
+	name: String!
+	"Base asset information"
+	baseAsset: Token
+	"Underlyer token information"
+	underlyer: Token!
+	"Destination vault's rewarder"
+	rewarder: Rewarder
+	"Vault decimals"
+	decimals: BigInt!
+	"Underlying tokens"
+	underlyingTokens: [Bytes!]!
+	"Exchange name"
+	exchangeName: String!
+	"Type of pool"
+	poolType: String!
+	"Staking destination type"
+	destType: String!
+	"Stats calculator"
+	calculator: IncentiveCalculator!
+	"Underlying Dex Pool"
+	poolAddress: Bytes!
+	"Holders"
+	holders: [DestinationVaultHolder!]!
+}
+
+"""
+Destination Vault Holders
+"""
+type DestinationVaultHolder @entity(immutable: false) {
+	"{DestinationVaultAddress}-{Holder}"
+	id: String!
+	"Amount of shares held"
+	amount: BigInt!
+}
+
+"""
+Rewarder
+"""
+type Rewarder @entity(immutable: false) {
+	"Rewarder address"
+	id: Bytes!
+
+	"Rewarder asset"
+	asset: Token
+
+	"Total rewards claimed by users"
+	rewardsClaimed: BigInt!
+
+	"Type of rewarder"
+	type: RewarderType
+
+	"Zero is block-based. One is time based"
+	timeType: BigInt
+
+	"Is this a root rewarder (true) or an extra (false)"
+	isMain: Boolean
+
+	"Rewarder's owner"
+	belongsTo: Bytes!
+
+	"Current estimated APY in ETH"
+	currentApy: BigInt
+
+	"7 Day MA of currentApy"
+	day7MAApy: BigInt
+
+	"30 Day MA of currentApy"
+	day30MAApy: BigInt
+
+	"Total time in blocks or seconds (based on timeType) the current reward is slated for"
+	currentRewardDuration: BigInt
+
+	"Current total reward amount being emitted"
+	currentRewardAmount: BigInt
+
+	rewardToken: RefToken
+
+	extraRewarders: [Rewarder!]
+}
+
+"""
+Type of rewarder
+"""
+enum RewarderType {
+	Autopool
+	DestinationVault
+	Staking
+}
+
+type UserInfo @entity(immutable: false) {
+	"Wallet address"
+	id: Bytes!
+
+	"Total TOKE locked in the staking contract"
+	totalStaked: BigInt!
+	"Number of staked positions"
+	numberOfStakes: BigInt!
+	"Total staking points owned"
+	totalPoints: BigInt!
+	"Total amount of rewards claimed by staker"
+	rewardsClaimed: BigInt!
+	"Total amount of rewards collected by staker"
+	rewardsCollected: BigInt!
+
+	"List of staking lockups information for this user"
+	stakingLockups: [StakingLockup!]!
+
+	"List of vaults for this user"
+	vaults: [UserVault!]!
+	"Number of vaults the user allocated assets in"
+	numberOfVaults: BigInt!
+
+	"Last used daily stats history entry"
+	lastDayData: UserInfoDayData!
+}
+
+"""
+Staking lockup information for a specific wallet for a specific lock
+"""
+type StakingLockup @entity(immutable: false) {
+	"<walletAddress>-<lockupIndex>`"
+	id: String!
+	"Wallet address"
+	user: Bytes!
+	"Lockup index"
+	lockupIndex: Int!
+	"Locked Amount"
+	amount: BigInt!
+	"Lockup start timestamp"
+	start: BigInt!
+	"Lockup end timestamp"
+	end: BigInt!
+	"Number of points issued to staker"
+	points: BigInt!
+}
+
+"""
+Daily staking history information for a specific wallet
+"""
+type UserInfoDayData @entity(immutable: false) {
+	"`{walletAddress}-{YYYY-MM-DD}`"
+	id: String!
+	"Wallet address"
+	user: Bytes!
+	"Date of data"
+	date: String!
+	"Total TOKE locked in the staking contract"
+	totalStaked: BigInt!
+	"Total number of staking points"
+	totalPoints: BigInt!
+	"Number of staked positions"
+	numberOfStakes: BigInt!
+	"Total amount of rewards claimed by staker"
+	rewardsClaimed: BigInt!
+	"Total amount of rewards collected by staker"
+	rewardsCollected: BigInt!
+
+	"List of vaults for this user"
+	vaults: [UserVault!]!
+	"Number of vaults the user allocated assets in"
+	numberOfVaults: BigInt!
+
+	"TS the day of the stats at 00:00"
+	timestamp: BigInt!
+}
+
+"""
+Represents an instance of user in a specific vault
+"""
+type UserVault @entity(immutable: false) {
+	"`{walletAddress}-{vaultAddress}`"
+	id: String!
+	"User's wallet address"
+	walletAddress: Bytes!
+	"Address of the vault"
+	vaultAddress: Bytes!
+
+	"Number of Autopool shares in the users wallet"
+	walletShares: BigInt!
+
+	"Number of Autopool shares staked in the rewarder"
+	stakedShares: BigInt!
+
+	"Number of Autopool shares staked in the rewarder and in the users wallet"
+	totalShares: BigInt!
+
+	"Total amount of rewards the user has claimed for this vault"
+	rewardsClaimed: BigInt!
+
+	lastDayData: UserVaultDayData!
+}
+
+"""
+Vault user's day history data
+"""
+type UserVaultDayData @entity(immutable: false) {
+	"`{walletAddress}-{vaultAddress}-{YYYY-MM-DD}`"
+	id: String!
+	"Date of data `YYYY-MM-DD`"
+	date: String!
+	"User's wallet address"
+	walletAddress: Bytes!
+	"Address of the vault"
+	vaultAddress: Bytes!
+	"Number of Autopool shares in the users wallet"
+	walletShares: BigInt!
+
+	"Number of Autopool shares staked in the rewarder"
+	stakedShares: BigInt!
+
+	"Number of Autopool shares staked in the rewarder and in the users wallet"
+	totalShares: BigInt!
+
+	"Total amount of rewards the user has claimed for this vault"
+	rewardsClaimed: BigInt!
+
+	"TS the day of the stats at 00:00"
+	timestamp: BigInt
+}
+
+"""
+Type of activity
+"""
+enum UserActivityType {
+	VaultDeposit
+	VaultWithdraw
+	Stake
+	Unstake
+	ExtendStake
+	StakingRewardsClaimed
+	StakingRewardsCollected
+	VaultRewardsClaimed
+	VaultRewardsCollected
+	VaultRewardStake
+	VaultRewardUnstake
+}
+
+"""
+Deposit Tracking
+"""
+type Holder @entity(immutable: false) {
+	"<autoPool>-<user>"
+	id: String!
+	"User address"
+	autoPool: Bytes!
+	"User address"
+	user: Bytes!
+	"Last updated timestamp"
+	lastUpdated: BigInt!
+	"Shares held by the user"
+	sharesHeld: BigInt!
+}
+
+"""
+User Activity
+"""
+type UserActivity @entity(immutable: true) {
+	"<wallet>-<timestamp>-<logIndex>"
+	id: String!
+
+	"User address"
+	user: Bytes!
+	"Block timestamp"
+	timestamp: BigInt!
+	"Activity type"
+	type: UserActivityType!
+
+	"JSON encoded activity data"
+	data: String!
+}
+
+type Strategy @entity(immutable: false) {
+	"Address of the Strategy"
+	id: Bytes!
+
+	rebalancesPerformed: BigInt!
+
+	"Autopool that owns this strategy"
+	parentAutopoolId: Bytes!
+}
+
+type RebalanceInOut @entity(immutable: false) {
+	"Same as its parent rebalance but with -in or -out"
+	id: String!
+	"Value in ETH of the token moving"
+	ethValue: BigInt!
+	"Token being moved"
+	underlyer: RefToken!
+	"Exchange being interacted with, or 'idle'"
+	exchangeName: String!
+	"Constituent tokens of the underlyer (or equal to underlyer if none)"
+	tokens: [RefToken!]!
+	"Related destination vault id. Or Autopool when idle."
+	destination: Bytes!
+	"When not idle, the destination vault"
+	destVault: DestinationVault
+	"Composite return we saw when rebalancing"
+	compositeReturn: BigInt!
+	"Safe Total Supply we saw when rebalacing"
+	safeTotalSupply: BigInt!
+}
+
+type Rebalance @entity(immutable: false) {
+	"id"
+	id: String!
+	"The 0 based index of rebalance's performed"
+	ix: BigInt!
+	"Block the rebalance was performed at"
+	blockNumber: BigInt!
+	"Transaction hash of where the rebalance was performed"
+	hash: String!
+	"When the rebalance was performed"
+	timestamp: BigInt!
+	"Information about the out movement"
+	outData: RebalanceInOut
+	"Information about the in movement"
+	inData: RebalanceInOut
+	"Autopool address"
+	autopool: Bytes!
+}
+
+type UserAutopoolBalanceChange @entity(immutable: false) {
+	"`{walletAddress}-{vaultAddress}-{blockNumber}`"
+	id: String!
+
+	"User's wallet address"
+	walletAddress: Bytes!
+
+	"Address of the vault"
+	vaultAddress: Bytes!
+
+	"When did the change occur"
+	timestamp: BigInt!
+
+	"Change events in this block"
+	items: [UserAutopoolBalanceChangeItem!]!
+
+	"Number of items"
+	numOfItems: Int!
+}
+
+type UserAutopoolBalanceChangeItem @entity(immutable: false) {
+	"`{walletAddress}-{vaultAddress}-{blockNumber}-{oneBasedIndex}`"
+	id: String!
+
+	"How much did the share balance change by"
+	shareChange: BigInt!
+
+	"How many assets were deposited, or withdrawn"
+	assetChange: BigInt!
+
+	"Was the balance change just a staking operation?"
+	staked: Boolean!
+}
+
+type TokenValue @entity(immutable: false) {
+	"Token address"
+	id: Bytes!
+	"Last block of snapshot"
+	lastSnapshotBlock: BigInt!
+	"Last timestamp of snapshot"
+	lastSnapshotTimestamp: BigInt! # uint40
+	"Fast filter price"
+	fastFilterPrice: BigInt! # uint256
+	"Slow filter price"
+	slowFilterPrice: BigInt! # uint256
+	"Price used in the system"
+	price: BigInt! #uint256
+	"The price field is either in ETH or USD based on isUSD. This is alway USD"
+	priceInUsd: BigInt!
+	"Number of samples taken for initialization"
+	initCount: BigInt! # uint256
+	"Is initialization complete"
+	initComplete: Boolean! # bool
+	"Latest day data entity recorded"
+	lastDayDataId: String
+	"Is price in USD"
+	isUSD: Boolean!
+	"Whether its an LST we can get backing for"
+	hasBacking: Boolean!
+	"Calculator to resolve backing from"
+	backingCalculator: Bytes
+	"Backing price"
+	backingPrice: BigInt!
+	"Backing price in USD"
+	backingPriceUsd: BigInt!
+	"Backing last updated at"
+	backingLastUpdatedTimestamp: BigInt!
+	"Oracle specifically for looking up backing"
+	backingRootOracle: Bytes
+}
+
+type TokenValueDayData @entity(immutable: false) {
+	"token-dateString"
+	id: String!
+	"Token address"
+	token: Bytes!
+	"Last block of snapshot"
+	lastSnapshotBlock: BigInt!
+	"Last timestamp of snapshot"
+	lastSnapshotTimestamp: BigInt! # uint40
+	"Fast filter price"
+	fastFilterPrice: BigInt! # uint256
+	"Slow filter price"
+	slowFilterPrice: BigInt! # uint256
+	"Price used in the system"
+	price: BigInt! #uint256
+	"The price field is either in ETH or USD based on isUSD. This is alway USD"
+	priceInUsd: BigInt!
+	"Number of samples taken for initialization"
+	initCount: BigInt! # uint256
+	"Is initialization complete"
+	initComplete: Boolean! # bool
+	"Is price in USD"
+	isUSD: Boolean!
+	"Whether its an LST we can get backing for"
+	hasBacking: Boolean!
+	"Calculator to resolve backing from"
+	backingCalculator: Bytes
+	"Backing price"
+	backingPrice: BigInt!
+	"Backing price in USD"
+	backingPriceUsd: BigInt!
+	"Backing last updated at"
+	backingLastUpdatedTimestamp: BigInt!
+}
+type MiscSettings @entity(immutable: false) {
+	"System Id"
+	id: String!
+
+	currentEthUsdChainlinkAggregator: Bytes!
+}
+###########################################################
+## End Custom
+###########################################################
+
+type ChainlinkAggregatorAnswerUpdated @entity(immutable: true) {
+	id: Bytes!
+	current: BigInt! # int256
+	roundId: BigInt! # uint256
+	updatedAt: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type DestTrimRebalanceDetail @entity(immutable: true) {
+	id: Bytes!
+	assetIndex: BigInt! # uint256
+	numViolationsOne: BigInt! # uint256
+	numViolationsTwo: BigInt! # uint256
+	discount: BigInt! # int256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type DestViolationMaxTrimAmount @entity(immutable: true) {
+	id: Bytes!
+	trimAmount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type DustPositionPortionSet @entity(immutable: true) {
+	id: Bytes!
+	newValue: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type IdleThresholdsSet @entity(immutable: true) {
+	id: Bytes!
+	newLowValue: BigInt! # uint256
+	newHighValue: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type LstPriceGapSet @entity(immutable: true) {
+	id: Bytes!
+	newPriceGap: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type PauseStart @entity(immutable: true) {
+	id: Bytes!
+	navPerShare: BigInt! # uint256
+	nav1: BigInt! # uint256
+	nav2: BigInt! # uint256
+	nav3: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type PauseStop @entity(immutable: true) {
+	id: Bytes!
+
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RebalanceBetweenDestination @entity(immutable: true) {
+	id: Bytes!
+	valueStats_inPrice: BigInt! # uint256
+	valueStats_outPrice: BigInt! # uint256
+	valueStats_inEthValue: BigInt! # uint256
+	valueStats_outEthValue: BigInt! # uint256
+	valueStats_swapCost: BigInt! # uint256
+	valueStats_slippage: BigInt! # uint256
+	params_destinationIn: Bytes! # address
+	params_tokenIn: Bytes! # address
+	params_amountIn: BigInt! # uint256
+	params_destinationOut: Bytes! # address
+	params_tokenOut: Bytes! # address
+	params_amountOut: BigInt! # uint256
+	outSummaryStats_destination: Bytes! # address
+	outSummaryStats_baseApr: BigInt! # uint256
+	outSummaryStats_feeApr: BigInt! # uint256
+	outSummaryStats_incentiveApr: BigInt! # uint256
+	outSummaryStats_safeTotalSupply: BigInt! # uint256
+	outSummaryStats_priceReturn: BigInt! # int256
+	outSummaryStats_maxDiscount: BigInt! # int256
+	outSummaryStats_maxPremium: BigInt! # int256
+	outSummaryStats_ownedShares: BigInt! # uint256
+	outSummaryStats_compositeReturn: BigInt! # int256
+	outSummaryStats_pricePerShare: BigInt! # uint256
+	inSummaryStats_destination: Bytes! # address
+	inSummaryStats_baseApr: BigInt! # uint256
+	inSummaryStats_feeApr: BigInt! # uint256
+	inSummaryStats_incentiveApr: BigInt! # uint256
+	inSummaryStats_safeTotalSupply: BigInt! # uint256
+	inSummaryStats_priceReturn: BigInt! # int256
+	inSummaryStats_maxDiscount: BigInt! # int256
+	inSummaryStats_maxPremium: BigInt! # int256
+	inSummaryStats_ownedShares: BigInt! # uint256
+	inSummaryStats_compositeReturn: BigInt! # int256
+	inSummaryStats_pricePerShare: BigInt! # uint256
+	swapOffsetPeriod: BigInt! # uint256
+	predictedAnnualizedGain: BigInt! # int256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RebalanceToIdle @entity(immutable: true) {
+	id: Bytes!
+	valueStats_inPrice: BigInt! # uint256
+	valueStats_outPrice: BigInt! # uint256
+	valueStats_inEthValue: BigInt! # uint256
+	valueStats_outEthValue: BigInt! # uint256
+	valueStats_swapCost: BigInt! # uint256
+	valueStats_slippage: BigInt! # uint256
+	outSummary_destination: Bytes! # address
+	outSummary_baseApr: BigInt! # uint256
+	outSummary_feeApr: BigInt! # uint256
+	outSummary_incentiveApr: BigInt! # uint256
+	outSummary_safeTotalSupply: BigInt! # uint256
+	outSummary_priceReturn: BigInt! # int256
+	outSummary_maxDiscount: BigInt! # int256
+	outSummary_maxPremium: BigInt! # int256
+	outSummary_ownedShares: BigInt! # uint256
+	outSummary_compositeReturn: BigInt! # int256
+	outSummary_pricePerShare: BigInt! # uint256
+	params_destinationIn: Bytes! # address
+	params_tokenIn: Bytes! # address
+	params_amountIn: BigInt! # uint256
+	params_destinationOut: Bytes! # address
+	params_tokenOut: Bytes! # address
+	params_amountOut: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RebalanceToIdleReason @entity(immutable: true) {
+	id: Bytes!
+	reason: Int! # uint8
+	maxSlippage: BigInt! # uint256
+	slippage: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type SuccessfulRebalanceBetweenDestination @entity(immutable: true) {
+	id: Bytes!
+	destinationOut: Bytes! # address
+	lastRebalanceTimestamp: BigInt! # uint40
+	lastTimestampAddedToDestination: BigInt! # uint40
+	swapCostOffsetPeriod: BigInt! # uint40
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type IncentiveCalculatorRewarder @entity(immutable: false) {
+	"{incentive calculator address}-{rewarder address}"
+	id: String!
+	"Parent incentive calculator"
+	parentCalculator: Bytes!
+	"Rewarder address"
+	rewarder: Bytes!
+	"Last safe total supply snapshot"
+	safeTotalSupply: BigInt
+	"Last time of safe total supply snapshot"
+	safeTotalSupplySnapshotTime: BigInt
+}
+
+type IncentiveCalculator @entity(immutable: false) {
+	"Address of calculator"
+	id: Bytes!
+
+	"Rewarders this calculator snapshots"
+	childRewarders: [IncentiveCalculatorRewarder!]!
+}
+
+type RewarderSafeTotalSupplySnapshot @entity(immutable: true) {
+	id: Bytes!
+	parentCalculator: Bytes! # address
+	rewarder: Bytes! # address
+	rewardRate: BigInt! # uint256
+	timeBetweenSnapshots: BigInt! # uint256
+	rewardsAccruedPerToken: BigInt! # uint256
+	safeTotalSupply: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+type RoleAdminChanged @entity(immutable: true) {
+	id: Bytes!
+	role: Bytes! # bytes32
+	previousAdminRole: Bytes! # bytes32
+	newAdminRole: Bytes! # bytes32
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RoleGranted @entity(immutable: true) {
+	id: Bytes!
+	role: Bytes! # bytes32
+	account: Bytes! # address
+	sender: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type RoleRevoked @entity(immutable: true) {
+	id: Bytes!
+	role: Bytes! # bytes32
+	account: Bytes! # address
+	sender: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type UserVote @entity(immutable: false) {
+	id: ID!
+	wallet: Bytes!
+	pools: [Bytes!]!
+	weights: [BigInt!]!
+	points: [BigInt!]!
+	toke: [BigInt!]!
+	blockNumber: BigInt!
+	timestamp: BigInt!
+	totalWeight: BigInt!
+}
+
+type UserVoteSnapshot @entity(immutable: false) {
+	"{userVote}-{block}"
+	id: String!
+	block: BigInt!
+	wallet: Bytes!
+	pools: [Bytes!]!
+	weights: [BigInt!]!
+	points: [BigInt!]!
+	toke: [BigInt!]!
+	blockNumber: BigInt!
+	timestamp: BigInt!
+	totalWeight: BigInt!
+}
+
+type VoteStatus @entity(immutable: false) {
+	id: ID!
+	pools: [Bytes!]!
+	points: [BigInt!]!
+	toke: [BigInt!]!
+	blockNumber: BigInt!
+	timestamp: BigInt!
+}
+
+type AccountBalanceV1 @entity(immutable: false) {
+	id: ID!
+	account: Bytes!
+	amount: BigInt!
+	numCycles: BigInt!
+	points: BigInt!
+	cycleStartBalance: BigInt!
+	cycleStartBalanceIndex: BigInt!
+	cycleStartPoints: BigInt!
+	cycleStartNumCycles: BigInt!
+	withdrawalRequested: BigInt!
+	timestamp: BigInt!
+	blockNumber: BigInt!
+}
+
+type AccountBalanceV1Snapshot @entity(immutable: false) {
+	"{AccountBalanceV1.id}-{block}"
+	id: ID!
+	block: BigInt!
+	account: Bytes!
+	amount: BigInt!
+	numCycles: BigInt!
+	points: BigInt!
+	cycleStartBalance: BigInt!
+	cycleStartBalanceIndex: BigInt!
+	cycleStartPoints: BigInt!
+	cycleStartNumCycles: BigInt!
+	withdrawalRequested: BigInt!
+	timestamp: BigInt!
+	blockNumber: BigInt!
+}
+
+type AccTokeVoteWeight @entity(immutable: false) {
+	id: ID! # constant ID like "global"
+	voted: BigInt!
+	notVoted: BigInt!
+	votedToke: BigInt!
+	notVotedToke: BigInt!
+	blockNumber: BigInt!
+	timestamp: BigInt!
+}
+
+type AccTokeVoteWeightSnapshot @entity(immutable: false) {
+	"global-{block}"
+	id: String!
+	block: BigInt!
+	voted: BigInt!
+	notVoted: BigInt!
+	votedToke: BigInt!
+	notVotedToke: BigInt!
+	blockNumber: BigInt!
+	timestamp: BigInt!
+}
+
+type CycleRolloverComplete @entity(immutable: true) {
+	id: ID!
+	cycleIndex: BigInt!
+	timestamp: BigInt!
+	blockNumber: BigInt!
+}
+type AccRewardRedemption @entity(immutable: true) {
+	id: Bytes!
+	attributedTo: Bytes! # address
+	liquidatedToken: Bytes! # address
+	liquidatedAmount: BigInt! # uint256
+	rewardTokenAmount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+type AccRewardRedemptionCycleData @entity(immutable: false) {
+	"Manager cycle index"
+	id: String!
+	"Attributed to this reward cycle. Id - 1"
+	forRewardCycle: BigInt!
+	rewardTokenAmount: BigInt! # uint256
+	rewardTokenValueInEth: BigInt # uint256
+	rewardTokenValueInUsd: BigInt # uint256
+}
+
+type TokenConfigured @entity(immutable: true) {
+	id: Bytes!
+	tokenToLiquidate: Bytes! # address
+	tokenType: String! # string
+	fromWallet: Bytes! # address
+	pctToLiquidate: BigInt! # uint256
+	currentTokenBalance: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sTokeRewardTracking @entity(immutable: false) {
+	"Single entity 'global'"
+	id: String!
+	"Tracking of rewards that have and need to be liquidate"
+	rewards: [sTokeReward!]!
+	"Started tracking block"
+	startTrackBlock: BigInt!
+	"Started tracking timestamp"
+	startTrackTimestamp: BigInt!
+}
+
+type sTokeReward @entity(immutable: false) {
+	"Token address"
+	id: Bytes!
+	"Token decimals"
+	decimals: Int!
+	"Source wallets we're tracking"
+	sources: [sTokeRewardSourceToken!]!
+	"Rolling amount of tokens that should go towards liquidation"
+	totalPendingLiquidationBalance: BigInt!
+	"Rolling amount of tokens that have been liquidated"
+	totalLiquidatedBalance: BigInt!
+	"Last update block"
+	lastUpdateBlock: BigInt!
+	"Last update timestamp"
+	lastUpdateTimestamp: BigInt!
+}
+
+type sTokeRewardBlockSnapshot @entity(immutable: false) {
+	"{Token address}-{block}"
+	id: String!
+	token: Bytes!
+	"For block"
+	block: BigInt!
+	"Token decimals"
+	decimals: Int!
+	"Source wallets we're tracking"
+	sources: [sTokeRewardSourceTokenBlockSnapshot!]!
+	"Rolling amount of tokens that should go towards liquidation"
+	totalPendingLiquidationBalance: BigInt!
+	"Rolling amount of tokens that have been liquidated"
+	totalLiquidatedBalance: BigInt!
+	"Last update block"
+	lastUpdateBlock: BigInt!
+	"Last update timestamp"
+	lastUpdateTimestamp: BigInt!
+}
+
+type sTokeRewardSourceToken @entity(immutable: false) {
+	"{wallet}-{token}"
+	id: String!
+	"Token address"
+	token: Bytes!
+	"Source wallet that is holding the token we'll track"
+	wallet: Bytes!
+	"Rolling amount of tokens that should go towards liquidation"
+	pendingLiquidationBalance: BigInt!
+	"Rolling amount of tokens that have been liquidated"
+	liquidatedBalance: BigInt!
+	"Used to tell us the style of tracking we'll do"
+	tokenType: String!
+	"Percent, in bps, of tokens that go towards rewards"
+	rewardBps: BigInt!
+	"Balance of the token when we started tracking, or, our checkpoint balance that've already counted"
+	checkpointBalance: BigInt!
+	"Value of the tokens held when we started tracking, or, our checkpoint that we've already handled"
+	checkpointValue: BigInt!
+	"Started tracking block"
+	startTrackBlock: BigInt!
+	"Started tracking timestamp"
+	startTrackTimestamp: BigInt!
+	"Last update block"
+	lastUpdateBlock: BigInt!
+	"Last update timestamp"
+	lastUpdateTimestamp: BigInt!
+	"Extension field used for various purposes"
+	extBigInt1: BigInt
+	"Name of the extension field"
+	extBigInt1Name: String
+	"Extension field used for various purposes"
+	extAddress1: Bytes
+	"Name of the extension field"
+	extAddress1Name: String
+	"Extension field used for various purposes"
+	extAddress2: Bytes
+	"Name of the extension field"
+	extAddress2Name: String
+}
+
+type sTokeRewardSourceTokenBlockSnapshot @entity(immutable: false) {
+	"{wallet}-{token}-{block}"
+	id: String!
+	"For block"
+	block: BigInt!
+	"Token address"
+	token: Bytes!
+	"Source wallet that is holding the token we'll track"
+	wallet: Bytes!
+	"Rolling amount of tokens that should go towards liquidation"
+	pendingLiquidationBalance: BigInt!
+	"Rolling amount of tokens that have been liquidated"
+	liquidatedBalance: BigInt!
+	"Used to tell us the style of tracking we'll do"
+	tokenType: String!
+	"Percent, in bps, of tokens that go towards rewards"
+	rewardBps: BigInt!
+	"Balance of the token when we started tracking, or, our checkpoint balance that've already counted"
+	checkpointBalance: BigInt!
+	"Value of the tokens held when we started tracking, or, our checkpoint that we've already handled"
+	checkpointValue: BigInt!
+	"Started tracking block"
+	startTrackBlock: BigInt!
+	"Started tracking timestamp"
+	startTrackTimestamp: BigInt!
+	"Last update block"
+	lastUpdateBlock: BigInt!
+	"Last update timestamp"
+	lastUpdateTimestamp: BigInt!
+	"Extension field used for various purposes"
+	extBigInt1: BigInt
+	"Name of the extension field"
+	extBigInt1Name: String
+	"Extension field used for various purposes"
+	extAddress1: Bytes
+	"Name of the extension field"
+	extAddress1Name: String
+	"Extension field used for various purposes"
+	extAddress2: Bytes
+	"Name of the extension field"
+	extAddress2Name: String
+}
+
+type StokeRewardChunk @entity(immutable: false) {
+	"Incrementing id"
+	id: String!
+	"Occurred at block"
+	block: BigInt!
+	"Occurred at timestamp"
+	timestamp: BigInt!
+	"Token attributed"
+	token: RefToken!
+	"Value accrual type"
+	tokenType: String!
+	"Wallet contributing to chunk"
+	fromWallet: Bytes!
+	"Token amount"
+	amount: BigInt!
+}
+
+type PoolRewardsBalance @entity(immutable: false) {
+	id: Bytes! # pool address
+	"Rolling amount of reward token earned"
+	balance: BigInt!
+	"Rolling amount of reward token earned in USD"
+	balanceUSD: BigInt!
+	"Started tracking block"
+	startTrackBlock: BigInt!
+	"Started tracking timestamp"
+	startTrackTimestamp: BigInt!
+	"Last update block"
+	lastUpdateBlock: BigInt!
+	"Last update timestamp"
+	lastUpdateTimestamp: BigInt!
+	"APR as of lastUpdateTimestamp per credit"
+	currentAprPerCredit: BigInt
+}
+
+type PoolRewardsBalanceSnapshot @entity(immutable: false) {
+	"{poolAddress}-{block}"
+	id: String!
+	block: BigInt!
+	"Rolling amount of reward token earned"
+	balance: BigInt!
+	"Rolling amount of reward token earned in USD"
+	balanceUSD: BigInt!
+	"Started tracking block"
+	startTrackBlock: BigInt!
+	"Started tracking timestamp"
+	startTrackTimestamp: BigInt!
+	"Last update block"
+	lastUpdateBlock: BigInt!
+	"Last update timestamp"
+	lastUpdateTimestamp: BigInt!
+	"APR as of lastUpdateTimestamp per credit"
+	currentAprPerCredit: BigInt
+}
+
+type PoolRewardsBalanceDayData @entity(immutable: false) {
+	"{Autopool}-{daystr}"
+	id: String!
+	"TS the day of the stats at 00:00"
+	timestamp: BigInt!
+	"Amount earned on the day"
+	earned: BigInt!
+	"Amount earned on the day in USD"
+	earnedUSD: BigInt!
+	"Rolling amount of reward token earned"
+	balance: BigInt!
+	"Rolling amount of reward token earned in USD"
+	balanceUSD: BigInt!
+	"Apr for the day"
+	dayAprPerCredit: BigInt!
+	"Current Apr for the day"
+	currentAprPerCredit: BigInt
+}
+
+type ATokenApproval @entity(immutable: true) {
+	id: Bytes!
+	owner: Bytes! # address
+	spender: Bytes! # address
+	value: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type BalanceTransfer @entity(immutable: true) {
+	id: Bytes!
+	from: Bytes! # address
+	to: Bytes! # address
+	value: BigInt! # uint256
+	index: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Burn @entity(immutable: true) {
+	id: Bytes!
+	from: Bytes! # address
+	target: Bytes! # address
+	value: BigInt! # uint256
+	balanceIncrease: BigInt! # uint256
+	index: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type ATokenInitialized @entity(immutable: true) {
+	id: Bytes!
+	underlyingAsset: Bytes! # address
+	pool: Bytes! # address
+	treasury: Bytes! # address
+	incentivesController: Bytes! # address
+	aTokenDecimals: Int! # uint8
+	aTokenName: String! # string
+	aTokenSymbol: String! # string
+	params: Bytes! # bytes
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Mint @entity(immutable: true) {
+	id: Bytes!
+	caller: Bytes! # address
+	onBehalfOf: Bytes! # address
+	value: BigInt! # uint256
+	balanceIncrease: BigInt! # uint256
+	index: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type ATokenTransfer @entity(immutable: true) {
+	id: Bytes!
+	from: Bytes! # address
+	to: Bytes! # address
+	value: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+type BackUnbacked @entity(immutable: true) {
+	id: Bytes!
+	reserve: Bytes! # address
+	backer: Bytes! # address
+	amount: BigInt! # uint256
+	fee: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Borrow @entity(immutable: true) {
+	id: Bytes!
+	reserve: Bytes! # address
+	user: Bytes! # address
+	onBehalfOf: Bytes! # address
+	amount: BigInt! # uint256
+	interestRateMode: Int! # uint8
+	borrowRate: BigInt! # uint256
+	referralCode: Int! # uint16
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type FlashLoan @entity(immutable: true) {
+	id: Bytes!
+	target: Bytes! # address
+	initiator: Bytes! # address
+	asset: Bytes! # address
+	amount: BigInt! # uint256
+	interestRateMode: Int! # uint8
+	premium: BigInt! # uint256
+	referralCode: Int! # uint16
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type IsolationModeTotalDebtUpdated @entity(immutable: true) {
+	id: Bytes!
+	asset: Bytes! # address
+	totalDebt: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type LiquidationCall @entity(immutable: true) {
+	id: Bytes!
+	collateralAsset: Bytes! # address
+	debtAsset: Bytes! # address
+	user: Bytes! # address
+	debtToCover: BigInt! # uint256
+	liquidatedCollateralAmount: BigInt! # uint256
+	liquidator: Bytes! # address
+	receiveAToken: Boolean! # bool
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type MintUnbacked @entity(immutable: true) {
+	id: Bytes!
+	reserve: Bytes! # address
+	user: Bytes! # address
+	onBehalfOf: Bytes! # address
+	amount: BigInt! # uint256
+	referralCode: Int! # uint16
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type MintedToTreasury @entity(immutable: true) {
+	id: Bytes!
+	reserve: Bytes! # address
+	amountMinted: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Repay @entity(immutable: true) {
+	id: Bytes!
+	reserve: Bytes! # address
+	user: Bytes! # address
+	repayer: Bytes! # address
+	amount: BigInt! # uint256
+	useATokens: Boolean! # bool
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type ReserveDataUpdated @entity(immutable: true) {
+	id: Bytes!
+	reserve: Bytes! # address
+	liquidityRate: BigInt! # uint256
+	stableBorrowRate: BigInt! # uint256
+	variableBorrowRate: BigInt! # uint256
+	liquidityIndex: BigInt! # uint256
+	variableBorrowIndex: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type ReserveDataUpdated1 @entity(immutable: true) {
+	id: Bytes!
+	reserve: Bytes! # address
+	liquidityRate: BigInt! # uint256
+	stableBorrowRate: BigInt! # uint256
+	variableBorrowRate: BigInt! # uint256
+	liquidityIndex: BigInt! # uint256
+	variableBorrowIndex: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type ReserveUsedAsCollateralDisabled @entity(immutable: true) {
+	id: Bytes!
+	reserve: Bytes! # address
+	user: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type ReserveUsedAsCollateralEnabled @entity(immutable: true) {
+	id: Bytes!
+	reserve: Bytes! # address
+	user: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Supply @entity(immutable: true) {
+	id: Bytes!
+	reserve: Bytes! # address
+	user: Bytes! # address
+	onBehalfOf: Bytes! # address
+	amount: BigInt! # uint256
+	referralCode: Int! # uint16
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type UserEModeSet @entity(immutable: true) {
+	id: Bytes!
+	user: Bytes! # address
+	categoryId: Int! # uint8
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type AaveV3PoolWithdraw @entity(immutable: true) {
+	id: Bytes!
+	reserve: Bytes! # address
+	user: Bytes! # address
+	to: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+type sTokeRewardsCycleHashAdded @entity(immutable: true) {
+	id: Bytes!
+	cycleIndex: BigInt! # uint256
+	latestClaimableHash: String! # string
+	cycleHash: String! # string
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type StokeRewardSummaryRecipientPoolBreakdown @entity(immutable: true) {
+	"{ipfsHash}-{user}-{pool}"
+	id: String!
+	"Users wallet"
+	wallet: String!
+	"Resulting APR based on reward"
+	apr: BigInt!
+	"Pool voted to"
+	pool: Bytes!
+	"Reward amount contributed to overall by voting to pool"
+	rewardAmount: BigInt!
+	"Amount of TOKE represented by votes applied"
+	toke: BigInt!
+	"Number of votes applied to the pool"
+	vote: BigInt!
+	"Weight bps applied to the pool"
+	weight: BigInt!
+}
+type StokeRewardSummaryRecipientBreakdown @entity(immutable: true) {
+	"{ipfsHash}-{user}"
+	id: String!
+	"Users wallet"
+	wallet: String!
+	"APR earned this cycle"
+	overallApr: BigInt!
+	"Pool breakdowns"
+	poolBreakdown: [StokeRewardSummaryRecipientPoolBreakdown!]!
+	"Total rewards earned this cycle"
+	totalRewardAmount: BigInt!
+	"Total TOKE staked for this cycle"
+	totalToke: BigInt!
+	"Total Votes held/used this cycle"
+	totalVotes: BigInt!
+	"Whether or not the user explicitly voted"
+	voted: Boolean!
+}
+
+type StokeRewardSummaryRecipientPayload @entity(immutable: true) {
+	"{ipfsHash}-{user}"
+	id: String!
+	"Cumulative rewards earned for all time"
+	amount: BigInt!
+	"Chain Id this payload can be redeemed on"
+	chainId: BigInt!
+	"Cycle this payload is for"
+	cycle: BigInt!
+	"User this payload is for"
+	wallet: Bytes!
+}
+
+type StokeRewardSummaryRecipient @entity(immutable: true) {
+	"{ipfsHash}-{user}"
+	id: String!
+	"Users wallet"
+	wallet: String!
+	"Breakdown of the cycle + user"
+	breakdown: StokeRewardSummaryRecipientBreakdown!
+	"Payload of the cycle + user"
+	payload: StokeRewardSummaryRecipientPayload!
+}
+
+type StokeRewardSummary @entity(immutable: true) {
+	"Cycle index this summary represents"
+	id: String!
+	"IPFS Hash that loaded this data"
+	ipfsHash: String!
+	"Start block of the cycle inclusive"
+	fromBlock: BigInt!
+	"End block of the cycle inclusive"
+	toBlock: BigInt!
+	"Total rewards distributed this cycle"
+	totalRewardsDistributedCycle: BigInt!
+	"The cycle hash this summary builds upon"
+	previousCycleHash: String
+	"The recipients who received rewards"
+	recipients: [StokeRewardSummaryRecipient!]!
+}
+
+type StokeRewardHashByCycle @entity(immutable: false) {
+	"Manager cycle id"
+	id: String!
+	"Cycle"
+	cycle: Int!
+	"Cycle Hash"
+	cycleHash: String!
+	"Claimable Hash"
+	latestClaimableHash: String!
+}
+
+type StokeRewardHashByHash @entity(immutable: false) {
+	"Hash we've created contexts for"
+	id: String!
+}
+type StatCalculatorRegistryFactorySet @entity(immutable: true) {
+	id: Bytes!
+	newFactory: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type StatCalculatorRegistered @entity(immutable: true) {
+	id: Bytes!
+	aprId: Bytes! # bytes32
+	calculatorAddress: Bytes! # address
+	caller: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type StatCalculatorRemoved @entity(immutable: true) {
+	id: Bytes!
+	aprId: Bytes! # bytes32
+	calculatorAddress: Bytes! # address
+	caller: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+type SpotPriceOracleInitialized @entity(immutable: true) {
+	id: Bytes!
+	version: Int! # uint8
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+type SpotPriceOracleRef @entity(immutable: false) {
+	"Pool Address"
+	id: Bytes!
+	"Spot Price Oracle for pool"
+	spotPriceOracle: Bytes
+}
+type LstStatsCalculatorInitialized @entity(immutable: true) {
+	id: Bytes!
+	version: Int! # uint8
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type Log @entity(immutable: false) {
+	id: String!
+	timestamp: BigInt!
+	type: String!
+	info: String
+}
+
+type AutopoolRebalanceStateStitch @entity(immutable: false) {
+	id: Bytes!
+	ix: Int!
+}
+
+type AutopoolRebalance @entity(immutable: false) {
+	id: Bytes!
+	autopool: Bytes!
+	timestamp: BigInt!
+	logIndex: BigInt!
+	transactionHash: Bytes!
+	blockNumber: BigInt!
+
+	tokenOut: RefToken!
+	tokenOutAmount: BigInt!
+	tokenOutValueInEth: BigInt!
+	tokenOutValueBaseAsset: BigInt!
+	tokenOutValueDenominatedIn: BigInt!
+
+	tokenIn: RefToken!
+	tokenInAmount: BigInt!
+	tokenInValueInEth: BigInt!
+	tokenInValueBaseAsset: BigInt!
+	tokenInValueDenominatedIn: BigInt!
+
+	destinationOutName: String!
+	destinationOutAddress: Bytes!
+	destinationOutExchangeName: String!
+	destinationOutUnderlyingTokens: [RefToken!]!
+
+	destinationInName: String!
+	destinationInAddress: Bytes!
+	destinationInExchangeName: String!
+	destinationInUnderlyingTokens: [RefToken!]!
+}
+type TokenRegistered @entity(immutable: true) {
+	id: Bytes!
+	token: Bytes! # address
+	oracle: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type TokenRegistrationRemoved @entity(immutable: true) {
+	id: Bytes!
+	token: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type TokenRegistrationReplaced @entity(immutable: true) {
+	id: Bytes!
+	token: Bytes! # address
+	oldOracle: Bytes! # address
+	newOracle: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type TokeMigration @entity(immutable: true) {
+	id: Bytes! # source prefix + transaction hash + log index
+	user: User!
+	amount: BigInt!
+	timestamp: BigInt!
+	type: String! # "direct" or "sTOKE"
+	blockNumber: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAutonPointChange @entity(immutable: true) {
+	id: Bytes!
+	user: User!
+	amountIncrease: BigInt!
+	amountDecrease: BigInt!
+	amountTotal: BigInt!
+	numCycles: BigInt!
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+	logIndex: BigInt!
+	intraIndex: BigInt!
+}
+
+type RequestedWithdrawTaken @entity(immutable: true) {
+	id: Bytes!
+	user: User!
+	amount: BigInt!
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+	logIndex: BigInt!
+}
+
+type User @entity(immutable: false) {
+	id: Bytes! # user wallet address
+	autoBalance: BigInt!
+	tokeMigrations: [TokeMigration!]! @derivedFrom(field: "user")
+	sAUTOBalance: BigInt!
+	sAUTONumCycles: BigInt!
+	sAUTOPendingWithdrawal: BigInt!
+	sAUTOPointChanges: [sAutonPointChange!]! @derivedFrom(field: "user")
+	sAUTORequestsTaken: [RequestedWithdrawTaken!]! @derivedFrom(field: "user")
+}
+
+type RoleHolder @entity(immutable: false) {
+	id: Bytes! # contract address + role + account
+	contract: AccContract!
+	role: Bytes! # bytes32
+	account: Bytes! # address
+	active: Boolean!
+}
+type AccContract @entity(immutable: false) {
+	id: Bytes! # contract address
+	autopilotSystemRegistry: Bytes # address
+	fxStateSender: Bytes # address
+	destinationOnL2: Bytes # address
+	eventSendSet: Boolean
+	maxCap: BigInt # uint256
+	maxLockCycles: BigInt # uint256
+	minLockCycles: BigInt # uint256
+	paused: Boolean
+	version: Int # uint8 from Initialized event
+	roleHolders: [RoleHolder!]! @derivedFrom(field: "contract")
+}
+
+type sAUTOAutopilotAccTokeMigration @entity(immutable: true) {
+	id: Bytes!
+	autopilotAccTokeContract: Bytes! # address
+	amount: BigInt! # uint256
+	to: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTOAutopilotSystemRegistrySet @entity(immutable: true) {
+	id: Bytes!
+	autopilotSystemRegistry: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTODestinationsSet @entity(immutable: true) {
+	id: Bytes!
+	fxStateSender: Bytes! # address
+	destinationOnL2: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTOEventSendSet @entity(immutable: true) {
+	id: Bytes!
+	eventSendSet: Boolean! # bool
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTOInitialized @entity(immutable: true) {
+	id: Bytes!
+	version: Int! # uint8
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTOMaxCapSetEvent @entity(immutable: true) {
+	id: Bytes!
+	maxCap: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTOMaxLockCyclesSetEvent @entity(immutable: true) {
+	id: Bytes!
+	maxLockCycles: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTOMinLockCyclesSetEvent @entity(immutable: true) {
+	id: Bytes!
+	minLockCycles: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTOPaused @entity(immutable: true) {
+	id: Bytes!
+	account: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTORoleAdminChanged @entity(immutable: true) {
+	id: Bytes!
+	role: Bytes! # bytes32
+	previousAdminRole: Bytes! # bytes32
+	newAdminRole: Bytes! # bytes32
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTORoleGranted @entity(immutable: true) {
+	id: Bytes!
+	role: Bytes! # bytes32
+	account: Bytes! # address
+	sender: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTORoleRevoked @entity(immutable: true) {
+	id: Bytes!
+	role: Bytes! # bytes32
+	account: Bytes! # address
+	sender: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTOTokeLockedEvent @entity(immutable: true) {
+	id: Bytes!
+	tokeSource: Bytes! # address
+	account: Bytes! # address
+	numCycles: BigInt! # uint256
+	currentCycle: BigInt! # uint256
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTOUnpaused @entity(immutable: true) {
+	id: Bytes!
+	account: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTOWithdrawalEvent @entity(immutable: true) {
+	id: Bytes!
+	account: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTOWithdrawalRequestCancelledEvent @entity(immutable: true) {
+	id: Bytes!
+	account: Bytes! # address
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type sAUTOWithdrawalRequestedEvent @entity(immutable: true) {
+	id: Bytes!
+	account: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+type TokensConverted @entity(immutable: true) {
+	id: Bytes!
+	from: Bytes! # address
+	receiver: Bytes! # address
+	finalReceiver: Bytes! # address
+	amount: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type TokensStaked @entity(immutable: true) {
+	id: Bytes!
+	from: Bytes! # address
+	account: Bytes! # address
+	amount: BigInt! # uint256
+	numOfCycles: BigInt! # uint256
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type GlobalStakeWeight @entity(immutable: false) {
+	"Constant 'global'"
+	id: ID!
+	"Total points in system (sum of all user amount * numCycles)"
+	totalPoints: BigInt!
+	"Total TOKE staked in system"
+	totalToke: BigInt!
+	blockNumber: BigInt!
+	timestamp: BigInt!
+}
+
+type GlobalRewardsBalance @entity(immutable: false) {
+	"Constant 'global'"
+	id: ID!
+	"Cumulative reward tokens earned"
+	balance: BigInt!
+	"Cumulative rewards in USD"
+	balanceUSD: BigInt!
+	"7-day moving average APR per credit"
+	currentAprPerCredit: BigInt
+	startTrackBlock: BigInt!
+	startTrackTimestamp: BigInt!
+	lastUpdateBlock: BigInt!
+	lastUpdateTimestamp: BigInt!
+}
+
+type GlobalRewardsBalanceDayData @entity(immutable: false) {
+	"Date string 'YYYY-MM-DD'"
+	id: String!
+	timestamp: BigInt!
+	earned: BigInt!
+	earnedUSD: BigInt!
+	balance: BigInt!
+	balanceUSD: BigInt!
+	dayAprPerCredit: BigInt!
+	currentAprPerCredit: BigInt
+}
+
+type sAutoRewardTracking @entity(immutable: false) {
+	"Single entity 'global'"
+	id: String!
+	"Tracking of rewards that have and need to be liquidate"
+	rewards: [sAutoReward!]!
+	"Started tracking block"
+	startTrackBlock: BigInt!
+	"Started tracking timestamp"
+	startTrackTimestamp: BigInt!
+}
+
+type sAutoReward @entity(immutable: false) {
+	"Token address"
+	id: Bytes!
+	"Token decimals"
+	decimals: Int!
+	"Source wallets we're tracking"
+	sources: [sAutoRewardSourceToken!]!
+	"Rolling amount of tokens that should go towards liquidation"
+	totalPendingLiquidationBalance: BigInt!
+	"Rolling amount of tokens that have been liquidated"
+	totalLiquidatedBalance: BigInt!
+	"Last update block"
+	lastUpdateBlock: BigInt!
+	"Last update timestamp"
+	lastUpdateTimestamp: BigInt!
+}
+
+type sAutoRewardSourceToken @entity(immutable: false) {
+	"{wallet}-{token}"
+	id: String!
+	"Token address"
+	token: Bytes!
+	"Source wallet that is holding the token we'll track"
+	wallet: Bytes!
+	"Rolling amount of tokens that should go towards liquidation"
+	pendingLiquidationBalance: BigInt!
+	"Rolling amount of tokens that have been liquidated"
+	liquidatedBalance: BigInt!
+	"Used to tell us the style of tracking we'll do"
+	tokenType: String!
+	"Percent, in bps, of tokens that go towards rewards"
+	rewardBps: BigInt!
+	"Balance of the token when we started tracking, or, our checkpoint balance that've already counted"
+	checkpointBalance: BigInt!
+	"Value of the tokens held when we started tracking, or, our checkpoint that we've already handled"
+	checkpointValue: BigInt!
+	"Started tracking block"
+	startTrackBlock: BigInt!
+	"Started tracking timestamp"
+	startTrackTimestamp: BigInt!
+	"Last update block"
+	lastUpdateBlock: BigInt!
+	"Last update timestamp"
+	lastUpdateTimestamp: BigInt!
+	"Extension field used for various purposes"
+	extBigInt1: BigInt
+	"Name of the extension field"
+	extBigInt1Name: String
+	"Extension field used for various purposes"
+	extAddress1: Bytes
+	"Name of the extension field"
+	extAddress1Name: String
+	"Extension field used for various purposes"
+	extAddress2: Bytes
+	"Name of the extension field"
+	extAddress2Name: String
+}
+
+type SautoRewardChunk @entity(immutable: false) {
+	"Incrementing id"
+	id: String!
+	"Occurred at block"
+	block: BigInt!
+	"Occurred at timestamp"
+	timestamp: BigInt!
+	"Token attributed"
+	token: RefToken!
+	"Value accrual type"
+	tokenType: String!
+	"Wallet contributing to chunk"
+	fromWallet: Bytes!
+	"Token amount"
+	amount: BigInt!
+}
