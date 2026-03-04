@@ -610,6 +610,7 @@ export const MOCK_CHURN_WATERFALL: ChurnWaterfallBar[] = [
   { label: "Dec 25", inflow:  5_900_000, outflow: -4_800_000 },
   { label: "Jan 26", inflow:  7_400_000, outflow: -3_200_000 },
   { label: "Feb 26", inflow:  6_200_000, outflow: -4_100_000 },
+  { label: "Mar 26*", inflow:  680_000, outflow: -290_000 },
 ];
 
 // ── Cohort retention heatmap ──────────────────────────────────────────────────
