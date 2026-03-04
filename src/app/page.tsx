@@ -129,7 +129,7 @@ export default function Page() {
       }}>
         <div style={{ padding: "32px 32px 0" }}>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", paddingBottom: "20px" }}>
-          <div style={{ fontSize: 20, letterSpacing: "0.3em", textTransform: "uppercase", color: "#f5c400" }}>
+          <div style={{ fontSize: 20, letterSpacing: "0.3em", textTransform: "uppercase", color: "#f5c400", textShadow: "0 0 24px rgba(245,196,0,0.45)" }}>
             Autopool Analysis System <span style={{ color: "#7a6200" }}>v1</span>
           </div>
           <div style={{ fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase", color: "#7a3300" }}>
@@ -140,7 +140,7 @@ export default function Page() {
             </span>
           </div>
         </div>
-        <div style={{ height: 2, background: "#c1121f" }} />
+        <div style={{ height: 2, background: "#c1121f", boxShadow: "0 0 10px rgba(193,18,31,0.75)" }} />
 
         {/* ── Inner tabs ─────────────────────────────────────────────── */}
         <div style={{ display: "flex", borderBottom: "1px solid #3a0000", padding: "0 32px" }}>
@@ -199,7 +199,7 @@ export default function Page() {
             };
 
             const tile = (label: string, value: React.ReactNode, sub?: React.ReactNode) => (
-              <div style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 1, minWidth: 140, background: "#000" }}>
+              <div className="nge-panel" style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 1, minWidth: 140, background: "#000" }}>
                 <div style={{ fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "#b85000", marginBottom: 12 }}>{label}</div>
                 <div style={{ fontSize: 26, letterSpacing: "0.06em", lineHeight: 1, color: Y }}>{value}</div>
                 {sub && <div style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: OD, marginTop: 8 }}>{sub}</div>}
@@ -249,7 +249,7 @@ export default function Page() {
             return (
               <div style={{ marginTop: 2 }}>
                 {/* Chart header */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", border: `1px solid ${OD}`, borderBottom: "none", padding: "12px 20px", background: "#000" }}>
+                <div className="nge-panel" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", border: `1px solid ${OD}`, borderBottom: "none", padding: "12px 20px", background: "#000" }}>
                   <div style={{ fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: O }}>
                     Total Value Locked
                     <span style={{ fontSize: 10, color: OD, marginLeft: 12 }}>— {granularity}</span>
@@ -267,7 +267,7 @@ export default function Page() {
                     ))}
                   </div>
                 </div>
-                <div style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 8px 8px 0" }}>
+                <div className="nge-panel" style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 8px 8px 0" }}>
                   <ResponsiveContainer width="100%" height={260}>
                     <ComposedChart data={tvlData} margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
                       <defs>
@@ -336,7 +336,7 @@ export default function Page() {
             };
             return (
               <div style={{ marginTop: 2 }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", border: `1px solid ${OD}`, borderBottom: "none", padding: "12px 20px", background: "#000" }}>
+                <div className="nge-panel" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", border: `1px solid ${OD}`, borderBottom: "none", padding: "12px 20px", background: "#000" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
                     <div style={{ fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: O }}>
                       Net Flows
@@ -360,7 +360,7 @@ export default function Page() {
                     ))}
                   </div>
                 </div>
-                <div style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 8px 8px 0" }}>
+                <div className="nge-panel" style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 8px 8px 0" }}>
                   <ResponsiveContainer width="100%" height={220}>
                     <ComposedChart data={flows} margin={{ top: 4, right: 16, bottom: 0, left: 0 }} barCategoryGap="20%">
                       <CartesianGrid stroke="#1a0a00" strokeDasharray="3 3" vertical={false} />
@@ -435,7 +435,7 @@ export default function Page() {
               new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
             return (
               <div style={{ marginTop: 2 }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", border: `1px solid ${OD}`, borderBottom: "none", padding: "12px 20px", background: "#000" }}>
+                <div className="nge-panel" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", border: `1px solid ${OD}`, borderBottom: "none", padding: "12px 20px", background: "#000" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
                     <div style={{ fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: O }}>
                       Dominance
@@ -465,7 +465,7 @@ export default function Page() {
                     ))}
                   </div>
                 </div>
-                <div style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 8px 8px 0" }}>
+                <div className="nge-panel" style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 8px 8px 0" }}>
                   <ResponsiveContainer width="100%" height={200}>
                     <ComposedChart data={chartData} margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
                       <defs>
@@ -550,7 +550,7 @@ export default function Page() {
             const mostActive = [...sorted].sort((a, b) => Math.abs(b.weeklyNetFlowUSD) - Math.abs(a.weeklyNetFlowUSD))[0];
 
             const spotTile = (label: string, pool: typeof MOCK_POOLS[0], value: React.ReactNode, valueColor: string, subLabel: string) => (
-              <div style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 1, minWidth: 180, background: "#000" }}>
+              <div className="nge-panel" style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 1, minWidth: 180, background: "#000" }}>
                 <div style={{ fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "#b85000", marginBottom: 12 }}>{label}</div>
                 <div style={{ fontSize: 13, letterSpacing: "0.14em", color: Y, marginBottom: 6 }}>{pool.symbol}</div>
                 <div style={{ fontSize: 24, letterSpacing: "0.06em", lineHeight: 1, color: valueColor }}>{value}</div>
@@ -604,7 +604,7 @@ export default function Page() {
                   const flowColor = flowPos ? G : R;
                   const denomColor = pool.denom === "ETH" ? "#00c8ff" : Y;
                   return (
-                    <div key={pool.id} style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 12 }}>
+                    <div key={pool.id} className="nge-panel" style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 12 }}>
                       {/* Header: symbol + badges */}
                       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -660,7 +660,7 @@ export default function Page() {
             );
             return (
               <div style={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-                <div style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 1, minWidth: 180, background: "#000" }}>
+                <div className="nge-panel" style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 1, minWidth: 180, background: "#000" }}>
                   <div style={{ fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "#b85000", marginBottom: 12, display: "flex", alignItems: "center" }}>
                     Median Hold Time
                     {ib("Time from a wallet's first deposit to its first full exit. Median is robust to outliers; mean is pulled up by long-term holders.")}
@@ -676,7 +676,7 @@ export default function Page() {
                     </div>
                   </div>
                 </div>
-                <div style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 1, minWidth: 220, background: "#000" }}>
+                <div className="nge-panel" style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 1, minWidth: 220, background: "#000" }}>
                   <div style={{ fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "#b85000", marginBottom: 12, display: "flex", alignItems: "center" }}>
                     Churn Rate
                     {ib("% of wallets that deposited and then fully exited within the given window. High churn suggests users are not finding long-term value.")}
@@ -690,7 +690,7 @@ export default function Page() {
                     ))}
                   </div>
                 </div>
-                <div style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 1, minWidth: 140, background: "#000" }}>
+                <div className="nge-panel" style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 1, minWidth: 140, background: "#000" }}>
                   <div style={{ fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "#b85000", marginBottom: 12, display: "flex", alignItems: "center" }}>
                     Re-deposit Rate
                     {ib("% of wallets that fully withdrew and later made a new deposit. A high rate signals trust in the protocol despite a temporary exit.")}
@@ -698,7 +698,7 @@ export default function Page() {
                   <div style={{ fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: OD, marginBottom: 6 }}>Rate</div>
                   <div style={{ fontSize: 26, letterSpacing: "0.06em", lineHeight: 1, color: G }}>{MOCK_REDEPOSIT_RATE}<span style={{ fontSize: 11, marginLeft: 2, color: G }}>%</span></div>
                 </div>
-                <div style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 2, minWidth: 280, background: "#000" }}>
+                <div className="nge-panel" style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 2, minWidth: 280, background: "#000" }}>
                   <div style={{ fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "#b85000", marginBottom: 4, display: "flex", alignItems: "center" }}>
                     Position Size Change by Cohort
                     {ib("For wallets still holding today, how has their position size changed since their first deposit? Grouped by how long ago they first deposited. Positive % = wallets have added more over time (conviction). Negative % = wallets have trimmed.")}
@@ -738,7 +738,7 @@ export default function Page() {
             const RETENTION_INFO = "Survival curves showing what % of wallets in each deposit-size tier are still holding at N days after their first deposit. If larger depositors stay longer, the curves for higher tiers sit above the lower ones and decay more slowly.";
             return (
               <div style={{ marginTop: 2 }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", border: `1px solid ${OD}`, borderBottom: "none", padding: "12px 20px", background: "#000" }}>
+                <div className="nge-panel" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", border: `1px solid ${OD}`, borderBottom: "none", padding: "12px 20px", background: "#000" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: O }}>
                     Retention by Deposit Tier
                     <span style={{ fontSize: 10, color: OD }}>— % of wallets still holding · days since first deposit</span>
@@ -754,7 +754,7 @@ export default function Page() {
                     </div>
                   </div>
                 </div>
-                <div style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 8px 8px 0" }}>
+                <div className="nge-panel" style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 8px 8px 0" }}>
                   <ResponsiveContainer width="100%" height={260}>
                     <LineChart data={MOCK_RETENTION_BY_TIER} margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
                       <CartesianGrid stroke="#1a0a00" strokeDasharray="3 3" vertical={false} />
@@ -858,12 +858,12 @@ export default function Page() {
 
                 {/* Left: cohort retention heatmap */}
                 <div style={{ flexShrink: 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, border: `1px solid ${OD}`, borderBottom: "none", padding: "12px 20px", background: "#000", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: O }}>
+                  <div className="nge-panel" style={{ display: "flex", alignItems: "center", gap: 10, border: `1px solid ${OD}`, borderBottom: "none", padding: "12px 20px", background: "#000", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: O }}>
                     Cohort Retention
                     <span style={{ fontSize: 10, color: OD }}>— % still holding at N days</span>
                     {infoBtn(COHORT_INFO)}
                   </div>
-                  <div style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 20px" }}>
+                  <div className="nge-panel" style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 20px" }}>
                     <div style={{ display: "grid", gridTemplateColumns: "56px repeat(4, 68px)", marginBottom: 4 }}>
                       <div />
                       {cols.map(c => (
@@ -896,7 +896,7 @@ export default function Page() {
 
                 {/* Right: churn waterfall */}
                 <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", border: `1px solid ${OD}`, borderBottom: "none", padding: "12px 20px", background: "#000" }}>
+                  <div className="nge-panel" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", border: `1px solid ${OD}`, borderBottom: "none", padding: "12px 20px", background: "#000" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: O }}>
                       Churn Waterfall
                       <span style={{ fontSize: 10, color: OD }}>— depositor tvl in vs out</span>
@@ -908,7 +908,7 @@ export default function Page() {
                       <span style={{ color: R }}>▮ Outflow</span>
                     </div>
                   </div>
-                  <div style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 8px 8px 0", flex: 1 }}>
+                  <div className="nge-panel" style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 8px 8px 0", flex: 1 }}>
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={MOCK_CHURN_WATERFALL} margin={{ top: 4, right: 16, bottom: 0, left: 0 }} barCategoryGap="22%">
                         <CartesianGrid stroke="#1a0a00" strokeDasharray="3 3" vertical={false} />
@@ -961,7 +961,7 @@ export default function Page() {
             return (
               <div style={{ display: "flex", gap: 2, flexWrap: "wrap", marginTop: 12 }}>
                 {/* Deposit size since inception */}
-                <div style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 1, minWidth: 180, background: "#000" }}>
+                <div className="nge-panel" style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 1, minWidth: 180, background: "#000" }}>
                   <div style={{ fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "#b85000", marginBottom: 12 }}>
                     Deposit Size — Since Inception
                   </div>
@@ -982,7 +982,7 @@ export default function Page() {
                 </div>
 
                 {/* Deposit size current depositors */}
-                <div style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 1, minWidth: 180, background: "#000" }}>
+                <div className="nge-panel" style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: 1, minWidth: 180, background: "#000" }}>
                   <div style={{ fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "#b85000", marginBottom: 12 }}>
                     Deposit Size — Current Holders
                   </div>
@@ -1003,7 +1003,7 @@ export default function Page() {
                 </div>
 
                 {/* Median deposit count */}
-                <div style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: "0 0 auto", minWidth: 160, background: "#000" }}>
+                <div className="nge-panel" style={{ border: `1px solid ${OD}`, padding: "16px 20px", flex: "0 0 auto", minWidth: 160, background: "#000" }}>
                   <div style={{ fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "#b85000", marginBottom: 12 }}>
                     Median Deposit Count
                   </div>
@@ -1024,7 +1024,7 @@ export default function Page() {
             const AM = "#f5a623";
             const peakCount = Math.max(...MOCK_DEPOSIT_DISTRIBUTION.map(d => d.count));
             return (
-              <div style={{ border: `1px solid ${OD}`, padding: "16px 20px", marginTop: 2 }}>
+              <div className="nge-panel" style={{ border: `1px solid ${OD}`, padding: "16px 20px", marginTop: 2 }}>
                 {/* header row */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -1117,7 +1117,7 @@ export default function Page() {
               }
             }
             return (
-              <div style={{ border: `1px solid ${OD}`, padding: "16px 20px", marginTop: 2 }}>
+              <div className="nge-panel" style={{ border: `1px solid ${OD}`, padding: "16px 20px", marginTop: 2 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                   <span style={{ fontSize: 11, letterSpacing: "0.3em", textTransform: "uppercase", color: O }}>
                     Gini Coefficient
