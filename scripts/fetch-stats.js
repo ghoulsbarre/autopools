@@ -300,25 +300,58 @@ function buildHistory(allDayData, poolMap) {
 // ── Pool summaries ─────────────────────────────────────────────────────────────
 
 /**
- * Build a PoolSummary[] from live pool data + the last 2 weekly snapshots
- * to derive weeklyNetFlow.
+ * Build a PoolSummary[] from live pool data + per-pool AutopoolDayData.
  *
  * @param {Array}  rawPools    - output of fetchPools across all chains
- * @param {Array}  history     - DaySnapshot[] (sorted ascending)
+ * @param {Array}  allDayData  - raw AutopoolDayData records from all chains
  */
-function buildPoolSummaries(rawPools, history) {
-  // Compute per-pool weekly net flow from AutopoolDayData (last 8 days)
-  // We'll use the aggregated history for overall weekly flow; per-pool weekly
-  // flow comes from the raw pool's current weeklyNetFlow if exposed, otherwise
-  // we approximate from recent history deltas.
-  // NOTE: The subgraph may expose weeklyNetFlowUSD directly on the Autopool
-  // entity (check schema). If so, use that field in fetchPools() above.
+function buildPoolSummaries(rawPools, allDayData) {
+  // Build per-pool day-data lookup: vaultId (lower) → sorted array of day records
+  const poolDayMap = new Map();
+  for (const dd of allDayData) {
+    const vid = dd.vault?.id?.toLowerCase();
+    if (!vid) continue;
+    if (!poolDayMap.has(vid)) poolDayMap.set(vid, []);
+    poolDayMap.get(vid).push(dd);
+  }
+  // Sort each pool's records ascending by date
+  for (const recs of poolDayMap.values()) {
+    recs.sort((a, b) => (a.date < b.date ? -1 : 1));
+  }
 
   return rawPools.map(p => {
     const isEth      = ETH_TOKENS.has(p.baseAsset?.symbol ?? "");
     const tvlUSD     = su(p.totalAssetsUSD ?? "0");
     const tvlNative  = isEth ? sn(p.totalAssets ?? "0") : tvlUSD;
     const nav        = Number(p.navPerShare ?? "1000000000000000000") / DIV_NATIVE;
+
+    // Per-pool weekly net flow: diff in cumulative deposits/withdrawals over ~7 days
+    let weeklyNetFlowUSD    = 0;
+    let weeklyNetFlowNative = 0;
+    const recs = poolDayMap.get(p.id?.toLowerCase());
+    if (recs && recs.length >= 2) {
+      const latest  = recs[recs.length - 1];
+      // Find the record closest to 7 days before the latest date
+      const cutoff  = new Date(latest.date);
+      cutoff.setUTCDate(cutoff.getUTCDate() - 7);
+      const cutoffStr = cutoff.toISOString().slice(0, 10);
+      // Pick the last record whose date is <= cutoffStr, or the earliest record
+      let ref = recs[0];
+      for (const r of recs) {
+        if (r.date <= cutoffStr) ref = r;
+        else break;
+      }
+      const depDeltaUSD = su(latest.assetsDepositedTotalUSD ?? "0") - su(ref.assetsDepositedTotalUSD ?? "0");
+      const witDeltaUSD = su(latest.assetsWithdrawnTotalUSD ?? "0") - su(ref.assetsWithdrawnTotalUSD ?? "0");
+      weeklyNetFlowUSD = depDeltaUSD - witDeltaUSD;
+      if (isEth) {
+        const depDeltaNat = sn(latest.assetsDepositedTotal ?? "0") - sn(ref.assetsDepositedTotal ?? "0");
+        const witDeltaNat = sn(latest.assetsWithdrawnTotal ?? "0") - sn(ref.assetsWithdrawnTotal ?? "0");
+        weeklyNetFlowNative = depDeltaNat - witDeltaNat;
+      } else {
+        weeklyNetFlowNative = weeklyNetFlowUSD;
+      }
+    }
 
     return {
       id:                   p.id,
@@ -330,15 +363,14 @@ function buildPoolSummaries(rawPools, history) {
       denomToken:           p.baseAsset?.symbol ?? "?",
       tvlUSD,
       tvlNative,
-      weeklyNetFlowUSD:     0,   // filled in below from history
-      weeklyNetFlowNative:  0,
+      weeklyNetFlowUSD,
+      weeklyNetFlowNative,
       depositors:           Number(p.totalSuppliers ?? 0),
       navPerShare:          nav,
       paused:               p.paused   ?? false,
       shutdown:             p.shutdown ?? false,
     };
   }).sort((a, b) => b.tvlUSD - a.tvlUSD);
-  // weeklyNetFlowUSD is approximated at the protocol level in buildProtocolWeeklyFlow
 }
 
 // ── Headline events ────────────────────────────────────────────────────────────
@@ -844,7 +876,7 @@ async function main() {
   console.log("\n[5/5] Computing metrics and writing JSON…");
 
   const history  = buildHistory(allDayData, poolMap);
-  const pools    = buildPoolSummaries(allRawPools, history);
+  const pools    = buildPoolSummaries(allRawPools, allDayData);
   const events   = buildHeadlineEvents(allRecentOps, poolRateMap, history);
   const deposits = buildDepositStats(allOps, allHolders, history, poolRateMap);
 
