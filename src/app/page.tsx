@@ -1359,7 +1359,7 @@ export default function Page() {
                         <XAxis dataKey="date" tickFormatter={fmt} tick={{ fontSize: 9, fill: OD, fontFamily: "inherit" }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
                         <YAxis tickFormatter={fmtY} tick={{ fontSize: 9, fill: OD, fontFamily: "inherit" }} axisLine={false} tickLine={false} width={52} />
                         <Tooltip contentStyle={{ background: "#0a0000", border: `1px solid ${O}`, fontSize: 10, fontFamily: "inherit" }} labelStyle={{ color: O }} itemStyle={{ color: Y }}
-                          formatter={(v: number | undefined) => [fmtAmt(v ?? 0), "TVL"]} labelFormatter={fmt} />
+                          formatter={(v: number | undefined) => [fmtAmt(v ?? 0), "TVL"]} labelFormatter={(d: unknown) => fmt(String(d))} />
                         <Line type="monotone" dataKey="tvlUSD" stroke={Y} strokeWidth={1.5} dot={false} />
                       </LineChart>
                     </ResponsiveContainer>
@@ -1378,7 +1378,7 @@ export default function Page() {
                         <XAxis dataKey="date" tickFormatter={fmt} tick={{ fontSize: 9, fill: OD, fontFamily: "inherit" }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
                         <YAxis tickFormatter={fmtAmt} tick={{ fontSize: 9, fill: OD, fontFamily: "inherit" }} axisLine={false} tickLine={false} width={52} />
                         <Tooltip contentStyle={{ background: "#0a0000", border: `1px solid ${O}`, fontSize: 10, fontFamily: "inherit" }} labelStyle={{ color: O }} itemStyle={{ color: Y }}
-                          formatter={(v: number | undefined) => [fmtAmt(v ?? 0), "Net Flow"]} labelFormatter={fmt} />
+                          formatter={(v: number | undefined) => [fmtAmt(v ?? 0), "Net Flow"]} labelFormatter={(d: unknown) => fmt(String(d))} />
                         <ReferenceLine y={0} stroke={OD} />
                         <Bar dataKey="netFlowUSD" radius={[2,2,0,0]}>
                           {chartData.map((d, i) => <Cell key={i} fill={d.netFlowUSD >= 0 ? G : R} fillOpacity={0.8} />)}
