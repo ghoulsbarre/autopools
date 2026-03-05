@@ -97,7 +97,7 @@ export default function Page() {
         MOCK_WALLET_BALANCES:           deps.walletBalances,
         MOCK_GINI:                      deps.gini,
       });
-    }).catch(() => { /* keep mock data */ });
+    }).catch((err) => { console.error("[autopools] failed to load live data, using mock:", err); });
   }, []);
 
   // Shadow the module-level mock imports with live data (same names → zero JSX changes)
