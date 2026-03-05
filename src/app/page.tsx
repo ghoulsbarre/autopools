@@ -76,7 +76,6 @@ export default function Page() {
       fetch("/protocol-data.json").then(r => { if (!r.ok) throw new Error("no protocol-data.json"); return r.json(); }),
       fetch("/deposits-stats.json").then(r => { if (!r.ok) throw new Error("no deposits-stats.json"); return r.json(); }),
     ]).then(([proto, deps]) => {
-      console.log("[autopools] live data loaded — history length:", proto.history?.length, "last TVL:", proto.history?.[proto.history.length-1]?.totalAssetsUSD);
       setData({
         generatedAt:               proto.generatedAt ?? null,
         MOCK_HISTORY:              proto.history,
@@ -98,7 +97,7 @@ export default function Page() {
         MOCK_WALLET_BALANCES:           deps.walletBalances,
         MOCK_GINI:                      deps.gini,
       });
-    }).catch((err) => { console.error("[autopools] failed to load live data, using mock:", err); });
+    }).catch(() => { /* keep mock data */ });
   }, []);
 
   // Shadow the module-level mock imports with live data (same names → zero JSX changes)
