@@ -606,17 +606,26 @@ export default function Page() {
               if (abs >= 1)    return `Ξ${abs.toFixed(2)}`;
               return `Ξ${abs.toFixed(4)}`;
             };
-            const Sparkline = ({ data, color }: { data?: number[]; color: string }) => {
-              if (!data || data.length < 2) return <svg width={56} height={28} />;
-              const min = Math.min(...data), max = Math.max(...data);
-              const range = max - min || 1;
-              const W = 56, H = 28, pad = 2;
-              const pts = data.map((v, i) =>
-                `${(i / (data.length - 1)) * (W - pad * 2) + pad},${H - pad - ((v - min) / range) * (H - pad * 2)}`
-              ).join(" ");
+            // Directional elbow sparkline: flat baseline → elbow at 50% → up/down to end.
+            // Displacement is proportional to % change; ±10% = max (top/bottom edge).
+            const Sparkline = ({ data }: { data?: number[] }) => {
+              const W = 56, H = 28, pad = 3;
+              if (!data || data.length < 2) return <svg width={W} height={H} />;
+              const prev = data[data.length - 2];
+              const curr = data[data.length - 1];
+              if (prev <= 0) return <svg width={W} height={H} />;
+              const pct     = (curr - prev) / prev;
+              const clamped = Math.max(-0.10, Math.min(0.10, pct));
+              const midY    = H / 2;
+              const endY    = midY - (clamped / 0.10) * (midY - pad);
+              const lineColor = Math.abs(pct) < 0.005 ? O : pct > 0 ? G : R;
               return (
-                <svg width={W} height={H} style={{ display: "block", flexShrink: 0, opacity: 0.85 }}>
-                  <polyline points={pts} fill="none" stroke={color} strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" />
+                <svg width={W} height={H} style={{ display: "block", flexShrink: 0 }}>
+                  <polyline
+                    points={`0,${midY} ${W/2},${midY} ${W},${endY}`}
+                    fill="none" stroke={lineColor} strokeWidth={1.5}
+                    strokeLinejoin="round" strokeLinecap="round"
+                  />
                 </svg>
               );
             };
@@ -666,7 +675,7 @@ export default function Page() {
                               <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "1px 6px", border: `1px solid ${OD}`, color: OD }}>{pool.chain}</span>
                             </div>
                           </div>
-                          <Sparkline data={pool.tvlWeekly} color={denomColor} />
+                          <Sparkline data={pool.tvlWeekly} />
                         </div>
                         {/* Divider */}
                         <div style={{ borderTop: `1px solid ${OD}` }} />
