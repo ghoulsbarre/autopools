@@ -224,76 +224,129 @@ async function fetchHolders(chainId) {
  * @param {Map}    poolMap     - pool id → pool metadata (from fetchPools)
  */
 function buildHistory(allDayData, poolMap) {
-  const byDate = new Map();
-
+  // ── Step 1: group records by pool and sort each pool's records by date ─────────
+  // This lets us compute per-pool day-over-day increments, which avoids the
+  // "new pool spike" artifact that occurs when a pool first appears in the data
+  // and its entire historical cumulative total is counted as a single day's flow.
+  const poolRecords = new Map(); // vaultId → sorted array of day records
   for (const dd of allDayData) {
-    const date = dd.date; // already "YYYY-MM-DD" string from the subgraph
     const pool = poolMap.get(dd.vault?.id);
     if (!pool) continue;
-
-    const isEth      = ETH_TOKENS.has(pool.baseAsset?.symbol ?? "");
-    const usdAssets  = su(dd.totalAssetsUSD ?? "0");
-    const natAssets  = sn(dd.totalAssets     ?? "0");
-    const depUSD     = su(dd.assetsDepositedTotalUSD ?? "0");
-    const witUSD     = su(dd.assetsWithdrawnTotalUSD ?? "0");
-    // Native cumulative flows — present for ETH pools; fall back to 0 if absent
-    const depNat     = dd.assetsDepositedTotal ? sn(dd.assetsDepositedTotal) : 0;
-    const witNat     = dd.assetsWithdrawnTotal ? sn(dd.assetsWithdrawnTotal) : 0;
-
-    if (!byDate.has(date)) {
-      byDate.set(date, {
-        date,
-        totalAssetsUSD:           0,
-        assetsDepositedTotalUSD:  0,
-        assetsWithdrawnTotalUSD:  0,
-        usdPoolAssetsUSD:         0,
-        usdPoolDepositedTotalUSD: 0,
-        usdPoolWithdrawnTotalUSD: 0,
-        ethPoolAssetsETH:         0,
-        ethPoolAssetsUSD:         0,
-        ethPoolDepositedTotalETH: 0,
-        ethPoolDepositedTotalUSD: 0,
-        ethPoolWithdrawnTotalETH: 0,
-        ethPoolWithdrawnTotalUSD: 0,
-        ethPriceUSD:              0,
-        navPerShare:              1,
-        totalSuppliers:           0,
-        feesCollected:            0,
-        _ethUSD: 0, _ethNat: 0,   // temp for price calculation
-      });
-    }
-
-    const s = byDate.get(date);
-    s.totalAssetsUSD          += usdAssets;
-    s.assetsDepositedTotalUSD += depUSD;
-    s.assetsWithdrawnTotalUSD += witUSD;
-
-    if (isEth) {
-      s.ethPoolAssetsETH         += natAssets;
-      s.ethPoolAssetsUSD         += usdAssets;
-      s.ethPoolDepositedTotalETH += depNat;
-      s.ethPoolDepositedTotalUSD += depUSD;
-      s.ethPoolWithdrawnTotalETH += witNat;
-      s.ethPoolWithdrawnTotalUSD += witUSD;
-      s._ethUSD += usdAssets;
-      s._ethNat += natAssets;
-    } else {
-      s.usdPoolAssetsUSD         += usdAssets;
-      s.usdPoolDepositedTotalUSD += depUSD;
-      s.usdPoolWithdrawnTotalUSD += witUSD;
-    }
-
-    s.totalSuppliers += Number(dd.totalSuppliers ?? 0);
-    s.navPerShare     = Number(dd.navPerShare ?? "1000000000000000000") / DIV_NATIVE;
+    const vid = dd.vault.id;
+    if (!poolRecords.has(vid)) poolRecords.set(vid, []);
+    poolRecords.get(vid).push(dd);
+  }
+  for (const recs of poolRecords.values()) {
+    recs.sort((a, b) => a.date.localeCompare(b.date));
   }
 
-  // Finalise: compute ETH price, remove temp fields, sort
+  // ── Step 2: accumulate per-date buckets using per-pool daily increments ────────
+  const byDate = new Map();
+
+  for (const [vid, recs] of poolRecords) {
+    const pool  = poolMap.get(vid);
+    const isEth = ETH_TOKENS.has(pool.baseAsset?.symbol ?? "");
+
+    for (let i = 0; i < recs.length; i++) {
+      const dd   = recs[i];
+      const prev = i > 0 ? recs[i - 1] : null;
+      const date = dd.date;
+
+      // TVL fields are point-in-time — sum across pools as before
+      const usdAssets = su(dd.totalAssetsUSD ?? "0");
+      const natAssets = sn(dd.totalAssets    ?? "0");
+
+      // Flow fields: use per-pool increment vs. previous record.
+      // First record for each pool contributes 0 to avoid the new-pool spike.
+      const depUSD = prev ? su(dd.assetsDepositedTotalUSD ?? "0") - su(prev.assetsDepositedTotalUSD ?? "0") : 0;
+      const witUSD = prev ? su(dd.assetsWithdrawnTotalUSD ?? "0") - su(prev.assetsWithdrawnTotalUSD ?? "0") : 0;
+      const depNat = prev ? (dd.assetsDepositedTotal  ? sn(dd.assetsDepositedTotal)  - sn(prev.assetsDepositedTotal  ?? "0") : 0) : 0;
+      const witNat = prev ? (dd.assetsWithdrawnTotal  ? sn(dd.assetsWithdrawnTotal)  - sn(prev.assetsWithdrawnTotal  ?? "0") : 0) : 0;
+
+      if (!byDate.has(date)) {
+        byDate.set(date, {
+          date,
+          totalAssetsUSD:    0,
+          usdPoolAssetsUSD:  0,
+          ethPoolAssetsETH:  0,
+          ethPoolAssetsUSD:  0,
+          // daily increment accumulators (summed across pools, converted to running totals in step 3)
+          _dDepUSD:    0, _dWitUSD:    0,
+          _dUsdDepUSD: 0, _dUsdWitUSD: 0,
+          _dEthDepETH: 0, _dEthWitETH: 0,
+          _dEthDepUSD: 0, _dEthWitUSD: 0,
+          // ETH price helpers
+          _ethUSD: 0, _ethNat: 0,
+          navPerShare:    1,
+          totalSuppliers: 0,
+          feesCollected:  0,
+        });
+      }
+
+      const s = byDate.get(date);
+      s.totalAssetsUSD  += usdAssets;
+      s._dDepUSD        += depUSD;
+      s._dWitUSD        += witUSD;
+
+      if (isEth) {
+        s.ethPoolAssetsETH  += natAssets;
+        s.ethPoolAssetsUSD  += usdAssets;
+        s._dEthDepETH       += depNat;
+        s._dEthWitETH       += witNat;
+        s._dEthDepUSD       += depUSD;
+        s._dEthWitUSD       += witUSD;
+        s._ethUSD           += usdAssets;
+        s._ethNat           += natAssets;
+      } else {
+        s.usdPoolAssetsUSD  += usdAssets;
+        s._dUsdDepUSD       += depUSD;
+        s._dUsdWitUSD       += witUSD;
+      }
+
+      s.totalSuppliers += Number(dd.totalSuppliers ?? 0);
+      s.navPerShare     = Number(dd.navPerShare ?? "1000000000000000000") / DIV_NATIVE;
+    }
+  }
+
+  // ── Step 3: sort by date, convert daily increments to running cumulative totals ─
+  const sortedDates = [...byDate.keys()].sort();
+  let cumDepUSD    = 0, cumWitUSD    = 0;
+  let cumUsdDepUSD = 0, cumUsdWitUSD = 0;
+  let cumEthDepETH = 0, cumEthWitETH = 0;
+  let cumEthDepUSD = 0, cumEthWitUSD = 0;
+
   const snapshots = [];
-  for (const [, s] of [...byDate.entries()].sort(([a], [b]) => a.localeCompare(b))) {
-    s.ethPriceUSD = s._ethNat > 0 ? s._ethUSD / s._ethNat : 0;
-    delete s._ethUSD;
-    delete s._ethNat;
-    snapshots.push(s);
+  for (const date of sortedDates) {
+    const s = byDate.get(date);
+
+    cumDepUSD    += s._dDepUSD;
+    cumWitUSD    += s._dWitUSD;
+    cumUsdDepUSD += s._dUsdDepUSD;
+    cumUsdWitUSD += s._dUsdWitUSD;
+    cumEthDepETH += s._dEthDepETH;
+    cumEthWitETH += s._dEthWitETH;
+    cumEthDepUSD += s._dEthDepUSD;
+    cumEthWitUSD += s._dEthWitUSD;
+
+    snapshots.push({
+      date,
+      totalAssetsUSD:           s.totalAssetsUSD,
+      assetsDepositedTotalUSD:  cumDepUSD,
+      assetsWithdrawnTotalUSD:  cumWitUSD,
+      usdPoolAssetsUSD:         s.usdPoolAssetsUSD,
+      usdPoolDepositedTotalUSD: cumUsdDepUSD,
+      usdPoolWithdrawnTotalUSD: cumUsdWitUSD,
+      ethPoolAssetsETH:         s.ethPoolAssetsETH,
+      ethPoolAssetsUSD:         s.ethPoolAssetsUSD,
+      ethPoolDepositedTotalETH: cumEthDepETH,
+      ethPoolDepositedTotalUSD: cumEthDepUSD,
+      ethPoolWithdrawnTotalETH: cumEthWitETH,
+      ethPoolWithdrawnTotalUSD: cumEthWitUSD,
+      ethPriceUSD:              s._ethNat > 0 ? s._ethUSD / s._ethNat : 0,
+      navPerShare:              s.navPerShare,
+      totalSuppliers:           s.totalSuppliers,
+      feesCollected:            0,
+    });
   }
 
   return snapshots;
