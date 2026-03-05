@@ -654,9 +654,8 @@ export default function Page() {
                       : `${flowNeutral ? "►" : (flowPos ? "▲" : "▼")} ${fmtUSD(Math.abs(pool.weeklyNetFlowUSD))}`;
                     return (
                       <div key={pool.id} className="nge-panel" style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 12 }}>
-                        {/* Header: sparkline + symbol + badges */}
+                        {/* Header: symbol + badges + sparkline */}
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                          <Sparkline data={pool.tvlWeekly} color={denomColor} />
                           <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1, minWidth: 0 }}>
                             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                               <span style={{ fontSize: 13, letterSpacing: "0.14em", color: Y }}>{pool.symbol}</span>
@@ -667,6 +666,7 @@ export default function Page() {
                               <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "1px 6px", border: `1px solid ${OD}`, color: OD }}>{pool.chain}</span>
                             </div>
                           </div>
+                          <Sparkline data={pool.tvlWeekly} color={denomColor} />
                         </div>
                         {/* Divider */}
                         <div style={{ borderTop: `1px solid ${OD}` }} />
