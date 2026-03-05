@@ -76,6 +76,7 @@ export default function Page() {
       fetch("/protocol-data.json").then(r => { if (!r.ok) throw new Error("no protocol-data.json"); return r.json(); }),
       fetch("/deposits-stats.json").then(r => { if (!r.ok) throw new Error("no deposits-stats.json"); return r.json(); }),
     ]).then(([proto, deps]) => {
+      console.log("[autopools] live data loaded — history length:", proto.history?.length, "last TVL:", proto.history?.[proto.history.length-1]?.totalAssetsUSD);
       setData({
         generatedAt:               proto.generatedAt ?? null,
         MOCK_HISTORY:              proto.history,
