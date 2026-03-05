@@ -629,7 +629,7 @@ export default function Page() {
                 )}
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 2 }}>
                   {MOCK_POOLS.map((pool) => {
-                    const flowNeutral = pool.weeklyNetFlowUSD === 0;
+                    const flowNeutral = Math.abs(pool.weeklyNetFlowUSD) < 1_000;
                     const flowPos     = pool.weeklyNetFlowUSD > 0;
                     const flowColor   = flowNeutral ? O : (flowPos ? G : R);
                     const denomColor  = pool.denom === "ETH" ? ETH_BLUE : Y;
