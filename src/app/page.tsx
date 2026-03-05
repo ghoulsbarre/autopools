@@ -588,6 +588,7 @@ export default function Page() {
           {statsTab === "Autopools" && <div style={{ borderTop: "1px solid #7a3300", margin: "20px 0 2px" }} />}
 
           {statsTab === "Autopools" && (() => {
+            const O  = "#ff6b00";
             const OD = "#7a3300";
             const Y  = "#f5c400";
             const G  = "#00ffb3";
@@ -600,9 +601,10 @@ export default function Page() {
             return (
               <div style={{ marginTop: 2, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 2 }}>
                 {MOCK_POOLS.map((pool) => {
-                  const flowPos = pool.weeklyNetFlowNative >= 0;
-                  const flowColor = flowPos ? G : R;
-                  const denomColor = pool.denom === "ETH" ? "#00c8ff" : Y;
+                  const flowNeutral = pool.weeklyNetFlowNative === 0;
+                  const flowPos     = pool.weeklyNetFlowNative > 0;
+                  const flowColor   = flowNeutral ? O : (flowPos ? G : R);
+                  const denomColor  = pool.denom === "ETH" ? "#00c8ff" : Y;
                   return (
                     <div key={pool.id} className="nge-panel" style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 12 }}>
                       {/* Header: symbol + badges */}
@@ -622,7 +624,7 @@ export default function Page() {
                       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                         {[
                           { label: "TVL",        value: fmtUSD(pool.tvlUSD),                    color: "#ccc"      },
-                          { label: "Weekly Flow", value: `${flowPos ? "▲" : "▼"} ${fmtUSD(pool.weeklyNetFlowNative)}`, color: flowColor },
+                          { label: "Weekly Flow", value: `${flowNeutral ? "►" : (flowPos ? "▲" : "▼")} ${fmtUSD(Math.abs(pool.weeklyNetFlowNative))}`, color: flowColor },
                           { label: "Depositors",  value: pool.depositors.toLocaleString(),       color: "#ccc"      },
                         ].map(({ label, value, color }) => (
                           <div key={label} style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
