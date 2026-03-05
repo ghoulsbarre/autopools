@@ -410,6 +410,26 @@ function buildPoolSummaries(rawPools, allDayData, liveEthPrice = null) {
       }
     }
 
+    // Weekly TVL sparkline: one data point per week (last 10 weeks), using USD values
+    const tvlWeekly = [];
+    const precs = poolDayMap.get(p.id?.toLowerCase());
+    if (precs && precs.length > 0) {
+      const weekMap = new Map(); // "YYYY-WW" → latest USD TVL for that week
+      for (const r of precs) {
+        const d   = new Date(r.date);
+        const dow = d.getUTCDay();
+        const mon = new Date(d);
+        mon.setUTCDate(d.getUTCDate() - (dow === 0 ? 6 : dow - 1));
+        const key = mon.toISOString().slice(0, 10);
+        const val = isEth && liveEthPrice
+          ? sn(r.totalAssets ?? "0") * liveEthPrice
+          : su(r.totalAssetsUSD ?? "0");
+        weekMap.set(key, val); // last record of each week wins
+      }
+      const sorted = [...weekMap.entries()].sort(([a], [b]) => a.localeCompare(b));
+      tvlWeekly.push(...sorted.slice(-10).map(([, v]) => Math.round(v)));
+    }
+
     return {
       id:                   p.id,
       name:                 p.name ?? p.symbol,
@@ -420,6 +440,7 @@ function buildPoolSummaries(rawPools, allDayData, liveEthPrice = null) {
       denomToken:           p.baseAsset?.symbol ?? "?",
       tvlUSD,
       tvlNative,
+      tvlWeekly,
       weeklyNetFlowUSD,
       weeklyNetFlowNative,
       depositors:           Number(p.totalSuppliers ?? 0),

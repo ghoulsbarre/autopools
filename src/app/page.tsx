@@ -606,6 +606,20 @@ export default function Page() {
               if (abs >= 1)    return `Ξ${abs.toFixed(2)}`;
               return `Ξ${abs.toFixed(4)}`;
             };
+            const Sparkline = ({ data, color }: { data?: number[]; color: string }) => {
+              if (!data || data.length < 2) return <svg width={56} height={28} />;
+              const min = Math.min(...data), max = Math.max(...data);
+              const range = max - min || 1;
+              const W = 56, H = 28, pad = 2;
+              const pts = data.map((v, i) =>
+                `${(i / (data.length - 1)) * (W - pad * 2) + pad},${H - pad - ((v - min) / range) * (H - pad * 2)}`
+              ).join(" ");
+              return (
+                <svg width={W} height={H} style={{ display: "block", flexShrink: 0, opacity: 0.85 }}>
+                  <polyline points={pts} fill="none" stroke={color} strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" />
+                </svg>
+              );
+            };
             const hasEthPools = MOCK_POOLS.some(p => p.denom === "ETH" && !p.shutdown);
             return (
               <div style={{ marginTop: 2 }}>
@@ -640,15 +654,18 @@ export default function Page() {
                       : `${flowNeutral ? "►" : (flowPos ? "▲" : "▼")} ${fmtUSD(Math.abs(pool.weeklyNetFlowUSD))}`;
                     return (
                       <div key={pool.id} className="nge-panel" style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 12 }}>
-                        {/* Header: symbol + badges */}
-                        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                            <span style={{ fontSize: 13, letterSpacing: "0.14em", color: Y }}>{pool.symbol}</span>
-                            {pool.paused && <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "1px 5px", border: `1px solid ${R}`, color: R }}>PAUSED</span>}
-                          </div>
-                          <div style={{ display: "flex", gap: 5 }}>
-                            <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "1px 6px", border: `1px solid ${denomColor}`, color: denomColor }}>{pool.denomToken}</span>
-                            <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "1px 6px", border: `1px solid ${OD}`, color: OD }}>{pool.chain}</span>
+                        {/* Header: sparkline + symbol + badges */}
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                          <Sparkline data={pool.tvlWeekly} color={denomColor} />
+                          <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1, minWidth: 0 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                              <span style={{ fontSize: 13, letterSpacing: "0.14em", color: Y }}>{pool.symbol}</span>
+                              {pool.paused && <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "1px 5px", border: `1px solid ${R}`, color: R }}>PAUSED</span>}
+                            </div>
+                            <div style={{ display: "flex", gap: 5 }}>
+                              <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "1px 6px", border: `1px solid ${denomColor}`, color: denomColor }}>{pool.denomToken}</span>
+                              <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "1px 6px", border: `1px solid ${OD}`, color: OD }}>{pool.chain}</span>
+                            </div>
                           </div>
                         </div>
                         {/* Divider */}

@@ -196,6 +196,7 @@ export interface PoolSummary {
   denomToken: string;   // actual underlying token (WETH, USDC, DOLA, EURC, USDT0, …)
   tvlUSD: number;
   tvlNative: number;    // ETH for ETH pools, USD amount for stable pools
+  tvlWeekly?: number[]; // weekly TVL snapshots for sparkline (last 10 weeks)
   weeklyNetFlowUSD: number;
   weeklyNetFlowNative: number;
   depositors: number;
