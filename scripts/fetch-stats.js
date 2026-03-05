@@ -47,6 +47,8 @@ const ETH_TOKENS = new Set(["WETH", "ETH", "WETH.e", "pxETH", "stETH", "rETH", "
 const DIV_USD    = 1e8;
 const DIV_NATIVE = 1e18;
 
+const COINBASE_ETH_PRICE_URL = "https://api.coinbase.com/v2/prices/ETH-USD/spot";
+
 // How many days of history to keep
 const HISTORY_DAYS = 365;
 
@@ -305,7 +307,7 @@ function buildHistory(allDayData, poolMap) {
  * @param {Array}  rawPools    - output of fetchPools across all chains
  * @param {Array}  allDayData  - raw AutopoolDayData records from all chains
  */
-function buildPoolSummaries(rawPools, allDayData) {
+function buildPoolSummaries(rawPools, allDayData, liveEthPrice = null) {
   // Build per-pool day-data lookup: vaultId (lower) → sorted array of day records
   const poolDayMap = new Map();
   for (const dd of allDayData) {
@@ -321,8 +323,8 @@ function buildPoolSummaries(rawPools, allDayData) {
 
   return rawPools.map(p => {
     const isEth      = ETH_TOKENS.has(p.baseAsset?.symbol ?? "");
-    const tvlUSD     = su(p.totalAssetsUSD ?? "0");
-    const tvlNative  = isEth ? sn(p.totalAssets ?? "0") : tvlUSD;
+    const tvlNative  = isEth ? sn(p.totalAssets ?? "0") : su(p.totalAssetsUSD ?? "0");
+    const tvlUSD     = isEth && liveEthPrice ? tvlNative * liveEthPrice : su(p.totalAssetsUSD ?? "0");
     const nav        = Number(p.navPerShare ?? "1000000000000000000") / DIV_NATIVE;
 
     // Per-pool weekly net flow: diff in cumulative deposits/withdrawals over ~7 days
@@ -348,6 +350,8 @@ function buildPoolSummaries(rawPools, allDayData) {
         const depDeltaNat = sn(latest.assetsDepositedTotal ?? "0") - sn(ref.assetsDepositedTotal ?? "0");
         const witDeltaNat = sn(latest.assetsWithdrawnTotal ?? "0") - sn(ref.assetsWithdrawnTotal ?? "0");
         weeklyNetFlowNative = depDeltaNat - witDeltaNat;
+        // Use live ETH price for current USD conversion if available
+        if (liveEthPrice) weeklyNetFlowUSD = weeklyNetFlowNative * liveEthPrice;
       } else {
         weeklyNetFlowNative = weeklyNetFlowUSD;
       }
@@ -782,6 +786,19 @@ function isCurrentMonth(label, today) {
 
 // ── Main ───────────────────────────────────────────────────────────────────────
 
+async function fetchEthPrice() {
+  try {
+    const res  = await fetch(COINBASE_ETH_PRICE_URL);
+    const json = await res.json();
+    const price = parseFloat(json?.data?.amount);
+    if (!isFinite(price) || price <= 0) throw new Error("invalid price");
+    return price;
+  } catch (e) {
+    console.warn(`  Could not fetch live ETH price from Coinbase: ${e.message}`);
+    return null;
+  }
+}
+
 async function main() {
   console.log("=== Autopool Stats Fetch ===");
   console.log(`Subgraph base: ${SUBGRAPH_BASE}`);
@@ -791,6 +808,11 @@ async function main() {
   const sinceDate = new Date(now);
   sinceDate.setDate(sinceDate.getDate() - HISTORY_DAYS);
   const sinceDateStr = sinceDate.toISOString().slice(0, 10); // YYYY-MM-DD
+
+  // ── 0. Fetch live ETH price ───────────────────────────────────────────────────
+  console.log("\n[0/5] Fetching live ETH price from Coinbase…");
+  const liveEthPrice = await fetchEthPrice();
+  console.log(`  ETH/USD: ${liveEthPrice ? `$${liveEthPrice.toFixed(2)}` : "unavailable (will use implied price)"}`);
 
   // ── 1. Fetch pool metadata across all chains ─────────────────────────────────
   console.log("\n[1/5] Fetching pool metadata…");
@@ -876,7 +898,16 @@ async function main() {
   console.log("\n[5/5] Computing metrics and writing JSON…");
 
   const history  = buildHistory(allDayData, poolMap);
-  const pools    = buildPoolSummaries(allRawPools, allDayData);
+
+  // Patch the most recent snapshot with the live ETH price
+  if (liveEthPrice && history.length > 0) {
+    const last = history[history.length - 1];
+    last.ethPriceUSD      = liveEthPrice;
+    last.ethPoolAssetsUSD = last.ethPoolAssetsETH * liveEthPrice;
+    last.totalAssetsUSD   = last.usdPoolAssetsUSD + last.ethPoolAssetsUSD;
+  }
+
+  const pools    = buildPoolSummaries(allRawPools, allDayData, liveEthPrice);
   const events   = buildHeadlineEvents(allRecentOps, poolRateMap, history);
   const deposits = buildDepositStats(allOps, allHolders, history, poolRateMap);
 
