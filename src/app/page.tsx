@@ -69,6 +69,7 @@ export default function Page() {
   const [range, setRange] = useState<TimeRange>("1M");
   const [denom, setDenom] = useState<Denom>("Total");
   const [ethPoolDenom, setEthPoolDenom] = useState<"ETH" | "USD">("USD");
+  const [selectedPool, setSelectedPool] = useState<typeof MOCK_POOLS[0] | null>(null);
   const [data, setData] = useState<AppData>(MOCK_DEFAULTS);
 
   // Load live JSON data on mount; silently fall back to mock data on any error
@@ -662,7 +663,7 @@ export default function Page() {
                       ? `${flowNeutral ? "►" : (flowPos ? "▲" : "▼")} ${fmtETH(Math.abs(pool.weeklyNetFlowNative))}`
                       : `${flowNeutral ? "►" : (flowPos ? "▲" : "▼")} ${fmtUSD(Math.abs(pool.weeklyNetFlowUSD))}`;
                     return (
-                      <div key={pool.id} className="nge-panel" style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 12 }}>
+                      <div key={pool.id} className="nge-panel" onClick={() => setSelectedPool(pool)} style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 12, cursor: "pointer" }}>
                         {/* Header: symbol + badges + sparkline */}
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                           <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1, minWidth: 0 }}>
@@ -1261,6 +1262,141 @@ export default function Page() {
         </div>
 
         </div>
+
+      {/* ── Pool detail overlay ───────────────────────────────────────────────── */}
+      {selectedPool && (() => {
+        const pool = selectedPool;
+        const O  = "#ff6b00";
+        const OD = "#7a3300";
+        const Y  = "#f5c400";
+        const G  = "#00ffb3";
+        const R  = "#c1121f";
+        const denomColor = pool.denom === "ETH" ? "#00c8ff" : Y;
+        const hist = pool.poolHistory ?? [];
+        const flowPos = (pool.weeklyNetFlowUSD ?? 0) >= 0;
+
+        const fmtAmt = (v: number) => {
+          const abs = Math.abs(v);
+          if (abs >= 1_000_000) return `$${(abs/1_000_000).toFixed(2)}M`;
+          return `$${(abs/1_000).toFixed(0)}K`;
+        };
+        const fmtY = (v: number) => `$${(v/1_000_000).toFixed(1)}M`;
+        const fmt  = (d: string) => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+
+        const NOW_OVERLAY = new Date();
+        const daysAgo = (iso: string) => {
+          const diff = Math.floor((NOW_OVERLAY.getTime() - new Date(iso).getTime()) / 86400000);
+          return diff === 0 ? "Today" : diff === 1 ? "1 day ago" : `${diff} days ago`;
+        };
+
+        const tile = (label: string, value: React.ReactNode, sub?: React.ReactNode) => (
+          <div className="nge-panel" style={{ border: `1px solid ${OD}`, padding: "14px 18px", flex: 1, minWidth: 130, background: "#000" }}>
+            <div style={{ fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "#b85000", marginBottom: 10 }}>{label}</div>
+            <div style={{ fontSize: 22, letterSpacing: "0.06em", lineHeight: 1, color: Y }}>{value}</div>
+            {sub && <div style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: OD, marginTop: 6 }}>{sub}</div>}
+          </div>
+        );
+
+        // Slice history for charts — last 30 days by default
+        const chartData = hist.slice(-30);
+
+        return (
+          <div
+            onClick={() => setSelectedPool(null)}
+            style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.82)", display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "32px 16px", overflowY: "auto" }}
+          >
+            <div
+              onClick={e => e.stopPropagation()}
+              style={{ background: "#000", border: `1px solid ${O}`, boxShadow: `0 0 40px rgba(255,107,0,0.2)`, width: "100%", maxWidth: 860, padding: "28px 32px", display: "flex", flexDirection: "column", gap: 20 }}
+            >
+              {/* Header */}
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+                <div>
+                  <div style={{ fontSize: 18, letterSpacing: "0.18em", color: Y, marginBottom: 8 }}>{pool.symbol}</div>
+                  <div style={{ display: "flex", gap: 6 }}>
+                    <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "2px 7px", border: `1px solid ${denomColor}`, color: denomColor }}>{pool.denomToken}</span>
+                    <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "2px 7px", border: `1px solid ${OD}`, color: OD }}>{pool.chain}</span>
+                    {pool.paused && <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "2px 7px", border: `1px solid ${R}`, color: R }}>PAUSED</span>}
+                  </div>
+                </div>
+                <button onClick={() => setSelectedPool(null)} style={{ fontFamily: "inherit", fontSize: 18, background: "transparent", border: "none", color: OD, cursor: "pointer", lineHeight: 1, padding: 0 }}>✕</button>
+              </div>
+
+              <div style={{ height: 1, background: R, boxShadow: `0 0 8px rgba(193,18,31,0.6)` }} />
+
+              {/* Stat tiles */}
+              <div style={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+                {tile("Total TVL", fmtAmt(pool.tvlUSD))}
+                {tile(
+                  "Weekly Flow",
+                  <span style={{ color: Math.abs(pool.weeklyNetFlowUSD) < 1000 ? O : flowPos ? G : R }}>
+                    {Math.abs(pool.weeklyNetFlowUSD) < 1000 ? "►" : flowPos ? "▲" : "▼"} {fmtAmt(Math.abs(pool.weeklyNetFlowUSD))}
+                  </span>,
+                  <span style={{ color: Math.abs(pool.weeklyNetFlowUSD) < 1000 ? O : flowPos ? G : R }}>
+                    {flowPos ? "+" : "−"}{((Math.abs(pool.weeklyNetFlowUSD) / (pool.tvlUSD || 1)) * 100).toFixed(2)}% of TVL
+                  </span>
+                )}
+                {tile("Depositors", pool.depositors.toLocaleString(), "Unique Addresses")}
+                {pool.holdTime && tile("Median Hold", `${pool.holdTime.medianDays}d`, `Mean ${pool.holdTime.meanDays}d`)}
+                {pool.lastBig100kDay
+                  ? tile("Last 100K+ Day",
+                      <span style={{ color: pool.lastBig100kDay.changeUSD >= 0 ? G : R }}>
+                        {pool.lastBig100kDay.changeUSD >= 0 ? "+" : "−"}{fmtAmt(Math.abs(pool.lastBig100kDay.changeUSD))}
+                      </span>,
+                      daysAgo(pool.lastBig100kDay.date))
+                  : tile("Last 100K+ Day", <span style={{ color: OD }}>—</span>, "none in history")
+                }
+              </div>
+
+              {/* TVL Chart */}
+              {chartData.length > 1 && (
+                <div>
+                  <div style={{ fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: O, marginBottom: 8 }}>Total Value Locked — 30d</div>
+                  <div className="nge-panel" style={{ border: `1px solid ${OD}`, background: "#000", padding: "12px 4px 4px" }}>
+                    <ResponsiveContainer width="100%" height={160}>
+                      <LineChart data={chartData} margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
+                        <CartesianGrid stroke={OD} strokeDasharray="3 3" vertical={false} />
+                        <XAxis dataKey="date" tickFormatter={fmt} tick={{ fontSize: 9, fill: OD, fontFamily: "inherit" }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
+                        <YAxis tickFormatter={fmtY} tick={{ fontSize: 9, fill: OD, fontFamily: "inherit" }} axisLine={false} tickLine={false} width={52} />
+                        <Tooltip contentStyle={{ background: "#0a0000", border: `1px solid ${O}`, fontSize: 10, fontFamily: "inherit" }} labelStyle={{ color: O }} itemStyle={{ color: Y }}
+                          formatter={(v: number) => [fmtAmt(v), "TVL"]} labelFormatter={fmt} />
+                        <Line type="monotone" dataKey="tvlUSD" stroke={Y} strokeWidth={1.5} dot={false} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              )}
+
+              {/* Net Flows Chart */}
+              {chartData.length > 1 && (
+                <div>
+                  <div style={{ fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: O, marginBottom: 8 }}>Net Flows — 30d</div>
+                  <div className="nge-panel" style={{ border: `1px solid ${OD}`, background: "#000", padding: "12px 4px 4px" }}>
+                    <ResponsiveContainer width="100%" height={120}>
+                      <BarChart data={chartData} margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
+                        <CartesianGrid stroke={OD} strokeDasharray="3 3" vertical={false} />
+                        <XAxis dataKey="date" tickFormatter={fmt} tick={{ fontSize: 9, fill: OD, fontFamily: "inherit" }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
+                        <YAxis tickFormatter={fmtAmt} tick={{ fontSize: 9, fill: OD, fontFamily: "inherit" }} axisLine={false} tickLine={false} width={52} />
+                        <Tooltip contentStyle={{ background: "#0a0000", border: `1px solid ${O}`, fontSize: 10, fontFamily: "inherit" }} labelStyle={{ color: O }} itemStyle={{ color: Y }}
+                          formatter={(v: number) => [fmtAmt(v), "Net Flow"]} labelFormatter={fmt} />
+                        <ReferenceLine y={0} stroke={OD} />
+                        <Bar dataKey="netFlowUSD" radius={[2,2,0,0]}>
+                          {chartData.map((d, i) => <Cell key={i} fill={d.netFlowUSD >= 0 ? G : R} fillOpacity={0.8} />)}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              )}
+
+              {chartData.length === 0 && (
+                <div style={{ textAlign: "center", padding: "32px 0", fontSize: 11, color: OD, letterSpacing: "0.15em" }}>NO HISTORY DATA — run fetch-stats.js to populate</div>
+              )}
+            </div>
+          </div>
+        );
+      })()}
+
       </div>
     );
 }

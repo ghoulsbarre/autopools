@@ -197,6 +197,9 @@ export interface PoolSummary {
   tvlUSD: number;
   tvlNative: number;    // ETH for ETH pools, USD amount for stable pools
   tvlWeekly?: number[]; // weekly TVL snapshots for sparkline (last 10 weeks)
+  poolHistory?: { date: string; tvlUSD: number; netFlowUSD: number }[]; // daily history for detail overlay
+  lastBig100kDay?: { date: string; changeUSD: number } | null;
+  holdTime?: { medianDays: number; meanDays: number };
   weeklyNetFlowUSD: number;
   weeklyNetFlowNative: number;
   depositors: number;

@@ -430,6 +430,55 @@ function buildPoolSummaries(rawPools, allDayData, liveEthPrice = null) {
       tvlWeekly.push(...sorted.slice(-10).map(([, v]) => Math.round(v)));
     }
 
+    // Per-pool daily history for detail overlay (last 90 days):
+    // TVL + daily net flow increments (using per-day diff, same approach as buildHistory)
+    const poolHistory = [];
+    const drecs = poolDayMap.get(p.id?.toLowerCase());
+    if (drecs && drecs.length > 0) {
+      const slice = drecs.slice(-91); // keep one extra for first-day diff context
+      for (let i = 1; i < slice.length; i++) {
+        const cur  = slice[i];
+        const prev = slice[i - 1];
+        const tvl      = isEth && liveEthPrice
+          ? sn(cur.totalAssets ?? "0") * liveEthPrice
+          : su(cur.totalAssetsUSD ?? "0");
+        const depDelta = su(cur.assetsDepositedTotalUSD ?? "0") - su(prev.assetsDepositedTotalUSD ?? "0");
+        const witDelta = su(cur.assetsWithdrawnTotalUSD ?? "0") - su(prev.assetsWithdrawnTotalUSD ?? "0");
+        poolHistory.push({ date: cur.date, tvlUSD: Math.round(tvl), netFlowUSD: Math.round(depDelta - witDelta) });
+      }
+    }
+
+    // Last 100k+ day: largest single-day TVL change in the pool's history
+    let lastBig100kDay = null;
+    if (drecs && drecs.length >= 2) {
+      let bestAbs = 100_000 * DIV_USD; // threshold in raw units
+      let bestEntry = null;
+      for (let i = 1; i < drecs.length; i++) {
+        const cur  = drecs[i];
+        const prev = drecs[i - 1];
+        const curTvl  = isEth && liveEthPrice ? sn(cur.totalAssets ?? "0") * liveEthPrice : su(cur.totalAssetsUSD ?? "0");
+        const prevTvl = isEth && liveEthPrice ? sn(prev.totalAssets ?? "0") * liveEthPrice : su(prev.totalAssetsUSD ?? "0");
+        const change = curTvl - prevTvl;
+        if (Math.abs(change) >= 100_000 && Math.abs(change) > bestAbs) {
+          bestAbs   = Math.abs(change);
+          bestEntry = { date: cur.date, changeUSD: Math.round(change) };
+        }
+      }
+      // Pick most recent 100k+ day (not necessarily the largest)
+      for (let i = drecs.length - 1; i >= 1; i--) {
+        const cur  = drecs[i];
+        const prev = drecs[i - 1];
+        const curTvl  = isEth && liveEthPrice ? sn(cur.totalAssets ?? "0") * liveEthPrice : su(cur.totalAssetsUSD ?? "0");
+        const prevTvl = isEth && liveEthPrice ? sn(prev.totalAssets ?? "0") * liveEthPrice : su(prev.totalAssetsUSD ?? "0");
+        const change = curTvl - prevTvl;
+        if (Math.abs(change) >= 100_000) {
+          lastBig100kDay = { date: cur.date, changeUSD: Math.round(change) };
+          break;
+        }
+      }
+      void bestEntry; // unused but kept for potential future use
+    }
+
     return {
       id:                   p.id,
       name:                 p.name ?? p.symbol,
@@ -441,6 +490,8 @@ function buildPoolSummaries(rawPools, allDayData, liveEthPrice = null) {
       tvlUSD,
       tvlNative,
       tvlWeekly,
+      poolHistory,
+      lastBig100kDay,
       weeklyNetFlowUSD,
       weeklyNetFlowNative,
       depositors:           Number(p.totalSuppliers ?? 0),
@@ -640,6 +691,49 @@ function buildDepositStats(allOps, allHolders, history, poolRateMap) {
     medianDays: Math.round(median(holdDays)),
     meanDays:   Math.round(holdDays.reduce((s, v) => s + v, 0) / (holdDays.length || 1)),
   };
+
+  // ── 4b. Per-pool hold times ───────────────────────────────────────────────────
+  const opsByVault = new Map();
+  for (const op of allOps) {
+    const vid = op.vaultAddress?.toLowerCase();
+    if (!vid) continue;
+    if (!opsByVault.has(vid)) opsByVault.set(vid, []);
+    opsByVault.get(vid).push(op);
+  }
+  const poolHoldTimes = new Map(); // vault id (lower) → { medianDays, meanDays }
+  for (const [vid, vops] of opsByVault) {
+    const vwm = new Map();
+    for (const op of vops) {
+      const wid  = op.walletAddress; if (!wid) continue;
+      const rate = poolRateMap.get(op.vaultAddress?.toLowerCase()) ?? 1;
+      const amt  = Math.abs(op.totalNative) * rate;
+      const type = op.totalNative >= 0 ? "DEPOSIT" : "WITHDRAWAL";
+      const ts   = Number(op.timestamp) * 1000;
+      if (!vwm.has(wid)) vwm.set(wid, { firstMs: null, lastExitMs: null, exited: false, bal: 0, ops: [] });
+      vwm.get(wid).ops.push({ type, amt, ts });
+    }
+    const days = [];
+    for (const w of vwm.values()) {
+      w.ops.sort((a, b) => a.ts - b.ts);
+      let bal = 0, exited = false;
+      for (const op of w.ops) {
+        if (op.type === "DEPOSIT") {
+          if (w.firstMs === null) w.firstMs = op.ts;
+          if (exited) exited = false;
+          bal += op.amt;
+        } else {
+          bal -= op.amt;
+          if (bal <= 0) { bal = 0; if (!exited && w.firstMs) { w.lastExitMs = op.ts; w.exited = true; exited = true; } }
+        }
+      }
+      if (w.exited && w.firstMs && w.lastExitMs) days.push((w.lastExitMs - w.firstMs) / 86400000);
+    }
+    days.sort((a, b) => a - b);
+    if (days.length > 0) poolHoldTimes.set(vid, {
+      medianDays: Math.round(median(days)),
+      meanDays:   Math.round(days.reduce((s, v) => s + v, 0) / days.length),
+    });
+  }
 
   // ── 5. Churn rate ─────────────────────────────────────────────────────────────
   // % of wallets with first deposit in last 6 months that exited within N days
@@ -849,6 +943,7 @@ function buildDepositStats(allOps, allHolders, history, poolRateMap) {
     redepositRate,
     walletBalances: walletBalancesFiltered,
     gini,
+    poolHoldTimes: Object.fromEntries(poolHoldTimes),
   };
 }
 
@@ -984,6 +1079,14 @@ async function main() {
   const pools    = buildPoolSummaries(allRawPools, allDayData, liveEthPrice);
   const events   = buildHeadlineEvents(allRecentOps, poolRateMap, history);
   const deposits = buildDepositStats(allOps, allHolders, history, poolRateMap);
+
+  // Enrich each pool with its per-pool hold time
+  if (deposits.poolHoldTimes) {
+    for (const pool of pools) {
+      const ht = deposits.poolHoldTimes[pool.id?.toLowerCase()];
+      if (ht) pool.holdTime = ht;
+    }
+  }
 
   const generatedAt = now.toISOString();
 
