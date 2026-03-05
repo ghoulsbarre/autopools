@@ -68,6 +68,7 @@ export default function Page() {
   const [statsTab, setStatsTab] = useState<"Protocol" | "Autopools" | "Deposits">("Protocol");
   const [range, setRange] = useState<TimeRange>("1M");
   const [denom, setDenom] = useState<Denom>("Total");
+  const [ethPoolDenom, setEthPoolDenom] = useState<"ETH" | "USD">("USD");
   const [data, setData] = useState<AppData>(MOCK_DEFAULTS);
 
   // Load live JSON data on mount; silently fall back to mock data on any error
@@ -593,49 +594,82 @@ export default function Page() {
             const Y  = "#f5c400";
             const G  = "#00ffb3";
             const R  = "#c1121f";
+            const ETH_BLUE = "#00c8ff";
             const fmtUSD = (n: number) => {
               const abs = Math.abs(n); const sign = n < 0 ? "−" : "";
               if (abs >= 1_000_000) return `${sign}$${(abs/1_000_000).toFixed(2)}M`;
               return `${sign}$${(abs/1_000).toFixed(0)}K`;
             };
+            const fmtETH = (n: number) => {
+              const abs = Math.abs(n);
+              if (abs >= 1000) return `Ξ${(abs/1000).toFixed(1)}K`;
+              if (abs >= 1)    return `Ξ${abs.toFixed(2)}`;
+              return `Ξ${abs.toFixed(4)}`;
+            };
+            const hasEthPools = MOCK_POOLS.some(p => p.denom === "ETH" && !p.shutdown);
             return (
-              <div style={{ marginTop: 2, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 2 }}>
-                {MOCK_POOLS.map((pool) => {
-                  const flowNeutral = pool.weeklyNetFlowUSD === 0;
-                  const flowPos     = pool.weeklyNetFlowUSD > 0;
-                  const flowColor   = flowNeutral ? O : (flowPos ? G : R);
-                  const denomColor  = pool.denom === "ETH" ? "#00c8ff" : Y;
-                  return (
-                    <div key={pool.id} className="nge-panel" style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 12 }}>
-                      {/* Header: symbol + badges */}
-                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                          <span style={{ fontSize: 13, letterSpacing: "0.14em", color: Y }}>{pool.symbol}</span>
-                          {pool.paused && <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "1px 5px", border: `1px solid ${R}`, color: R }}>PAUSED</span>}
-                        </div>
-                        <div style={{ display: "flex", gap: 5 }}>
-                          <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "1px 6px", border: `1px solid ${denomColor}`, color: denomColor }}>{pool.denomToken}</span>
-                          <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "1px 6px", border: `1px solid ${OD}`, color: OD }}>{pool.chain}</span>
-                        </div>
-                      </div>
-                      {/* Divider */}
-                      <div style={{ borderTop: `1px solid ${OD}` }} />
-                      {/* Metrics */}
-                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                        {[
-                          { label: "TVL",        value: fmtUSD(pool.tvlUSD),                    color: "#ccc"      },
-                          { label: "Weekly Flow", value: `${flowNeutral ? "►" : (flowPos ? "▲" : "▼")} ${fmtUSD(Math.abs(pool.weeklyNetFlowNative))}`, color: flowColor },
-                          { label: "Depositors",  value: pool.depositors.toLocaleString(),       color: "#ccc"      },
-                        ].map(({ label, value, color }) => (
-                          <div key={label} style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                            <span style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: OD }}>{label}</span>
-                            <span style={{ fontSize: 12, letterSpacing: "0.06em", color }}>{value}</span>
-                          </div>
-                        ))}
-                      </div>
+              <div style={{ marginTop: 2 }}>
+                {/* ETH/USD toggle — only shown when ETH pools exist */}
+                {hasEthPools && (
+                  <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 6 }}>
+                    <div style={{ display: "flex", gap: 2, alignItems: "center" }}>
+                      <span style={{ fontSize: 9, letterSpacing: "0.18em", color: OD, marginRight: 6, textTransform: "uppercase" }}>ETH pools</span>
+                      {(["ETH", "USD"] as const).map(d => (
+                        <button key={d} onClick={() => setEthPoolDenom(d)} style={{
+                          fontFamily: "inherit", fontSize: 9, letterSpacing: "0.18em",
+                          textTransform: "uppercase", padding: "3px 8px",
+                          background: ethPoolDenom === d ? (d === "ETH" ? ETH_BLUE : OD) : "transparent",
+                          color: ethPoolDenom === d ? "#000" : OD,
+                          border: `1px solid ${ethPoolDenom === d ? (d === "ETH" ? ETH_BLUE : O) : OD}`,
+                          cursor: "pointer",
+                        }}>{d}</button>
+                      ))}
                     </div>
-                  );
-                })}
+                  </div>
+                )}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 2 }}>
+                  {MOCK_POOLS.map((pool) => {
+                    const flowNeutral = pool.weeklyNetFlowUSD === 0;
+                    const flowPos     = pool.weeklyNetFlowUSD > 0;
+                    const flowColor   = flowNeutral ? O : (flowPos ? G : R);
+                    const denomColor  = pool.denom === "ETH" ? ETH_BLUE : Y;
+                    const showInETH   = pool.denom === "ETH" && ethPoolDenom === "ETH";
+                    const tvlDisplay  = showInETH ? fmtETH(pool.tvlNative) : fmtUSD(pool.tvlUSD);
+                    const flowDisplay = showInETH
+                      ? `${flowNeutral ? "►" : (flowPos ? "▲" : "▼")} ${fmtETH(Math.abs(pool.weeklyNetFlowNative))}`
+                      : `${flowNeutral ? "►" : (flowPos ? "▲" : "▼")} ${fmtUSD(Math.abs(pool.weeklyNetFlowUSD))}`;
+                    return (
+                      <div key={pool.id} className="nge-panel" style={{ border: `1px solid ${OD}`, background: "#000", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 12 }}>
+                        {/* Header: symbol + badges */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <span style={{ fontSize: 13, letterSpacing: "0.14em", color: Y }}>{pool.symbol}</span>
+                            {pool.paused && <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "1px 5px", border: `1px solid ${R}`, color: R }}>PAUSED</span>}
+                          </div>
+                          <div style={{ display: "flex", gap: 5 }}>
+                            <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "1px 6px", border: `1px solid ${denomColor}`, color: denomColor }}>{pool.denomToken}</span>
+                            <span style={{ fontSize: 9, letterSpacing: "0.1em", padding: "1px 6px", border: `1px solid ${OD}`, color: OD }}>{pool.chain}</span>
+                          </div>
+                        </div>
+                        {/* Divider */}
+                        <div style={{ borderTop: `1px solid ${OD}` }} />
+                        {/* Metrics */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                          {[
+                            { label: "TVL",         value: tvlDisplay,                      color: "#ccc"      },
+                            { label: "Weekly Flow",  value: flowDisplay,                     color: flowColor   },
+                            { label: "Depositors",   value: pool.depositors.toLocaleString(), color: "#ccc"     },
+                          ].map(({ label, value, color }) => (
+                            <div key={label} style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                              <span style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: OD }}>{label}</span>
+                              <span style={{ fontSize: 12, letterSpacing: "0.06em", color }}>{value}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             );
           })()}
